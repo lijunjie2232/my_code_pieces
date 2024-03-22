@@ -1,0 +1,754 @@
+{
+  "folders": [
+    {
+      "id": "FFoy_tpD",
+      "name": "Default",
+      "defaultLanguage": "typescript",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "createdAt": 1705547730793,
+      "updatedAt": 1705547730793,
+      "index": 0
+    },
+    {
+      "name": "js",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "plain_text",
+      "id": "8qmQazwt",
+      "createdAt": 1705547881037,
+      "updatedAt": 1705547887416,
+      "index": 1
+    },
+    {
+      "name": "nodejs",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "plain_text",
+      "id": "OtjZFwbc",
+      "createdAt": 1705559758412,
+      "updatedAt": 1705559762435
+    },
+    {
+      "name": "python",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "python",
+      "id": "weWtbZI4",
+      "createdAt": 1705649797466,
+      "updatedAt": 1709526488611
+    },
+    {
+      "name": "linux",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "sh",
+      "id": "NCg2YrWJ",
+      "createdAt": 1705655890816,
+      "updatedAt": 1709526511683
+    },
+    {
+      "name": "web",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "plain_text",
+      "id": "fA481292",
+      "createdAt": 1705739854728,
+      "updatedAt": 1705739858907
+    },
+    {
+      "name": "ts",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "typescript",
+      "id": "RxpfS9zV",
+      "createdAt": 1709687889308,
+      "updatedAt": 1709687938343
+    },
+    {
+      "name": "cmd",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "powershell",
+      "id": "HRD2NCV8",
+      "createdAt": 1711067461127,
+      "updatedAt": 1711067487711
+    }
+  ],
+  "snippets": [
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "8qmQazwt",
+      "tagsIds": [],
+      "description": null,
+      "name": "xhr",
+      "content": [
+        {
+          "label": "get",
+          "language": "javascript",
+          "value": "function loadDoc() {\n    // 第一步： 创建xhr对象\n    let xhr = new XMLHttpRequest();\n    // 第二步： 调用open函数 指定请求方式 与URL地址\n    xhr.open('GET', '/demo/music_list.xml', true);\n    // 第三步： 调用send函数 发起ajax请求\n    xhr.send();\n    // 第四步： 监听onreadystatechange事件\n    xhr.onreadystatechange = function () {\n        // 监听xhr对象的请求状态 与服务器的响应状态\n        if (this.readyState == 4 && this.status == 200) {\n            // 如果响应就绪的话，就创建表格(拿到了服务器响应回来的数据xhr.responseText)\n            myFunction(this)\n        }\n    }\n}\n\nxhr.open('GET', 'http://www.liulongbin.top:3006/api/getbooks?id=1')\n"
+        },
+        {
+          "label": "post-formdata",
+          "language": "javascript",
+          "value": "// 第一步： 创建xhr对象\nlet xhr = new XMLHttpRequest();\n// 第二步： 调用open函数\nxhr.open('POST', 'http://www.liulongbin.top:3006/api/addbook')\n// 第三步： 设置Content-Type属性 （这一步是固定的写法）\nxhr.setRequestHeader('Conten-Type', 'application/x-www-form-urlencoded')\n// 第四步： 调用send（）函数，同时将数据以查询字符串的形式，提交给服务器\nxhr.send('bookname=水浒传&author=施耐庵&publisher=天津图书出版社')\n// 第五步：监听onreadystatechange事件\nxhr.onreadystatechange = function () {\n    if (xhr.readyState === 4 && xhr.status === 200) {\n        console.log(xhr.responseText)\n    }\n}"
+        },
+        {
+          "label": "post-json",
+          "language": "javascript",
+          "value": "const xhr = new XMLHttpRequest()\n\n// listen for `load` event\nxhr.onload = () => {\n  // print JSON response\n  if (xhr.status >= 200 && xhr.status < 300) {\n    // parse JSON\n    const response = JSON.parse(xhr.responseText)\n    console.log(response)\n  }\n}\n\n// create a JSON object\nconst json = {\n  email: 'eve.holt@reqres.in',\n  password: 'cityslicka'\n}\n\n// open request\nxhr.open('POST', 'https://reqres.in/api/login')\n\n// set `Content-Type` header\nxhr.setRequestHeader('Content-Type', 'application/json')\n\n// send rquest with JSON payload\nxhr.send(JSON.stringify(json))"
+        }
+      ],
+      "id": "jWmi9e8d",
+      "createdAt": 1705547901298,
+      "updatedAt": 1705548171733
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "8qmQazwt",
+      "tagsIds": [],
+      "description": null,
+      "name": "ajax",
+      "content": [
+        {
+          "label": "get",
+          "language": "javascript",
+          "value": "$.get('url', {name: 'zs', age: 20}, function() {})\n// 等价于\n$.get('url?name=zs&age=20', function() {})\n\n$.ajax({ method: 'GET', url: 'url', data: {name: 'zs', age: 20}, success: function() {} })\n// 等价于\n$.ajax({ method: 'GET', url: 'url?name=zs&age=20', success: function() {} })"
+        },
+        {
+          "label": "json",
+          "language": "plain_text",
+          "value": "$.ajax({\n  url: 'example.com/api/data',\n  method: 'GET',\n  dataType: 'json',\n  success: function(data) {\n    // 成功接收到数据后的回调函数\n    // data 参数就是解析后的 JSON 数据\n    console.log(data); // 在控制台中打印数据\n\n    // 以下可以根据需要进行数据处理和展示\n    // 例如，将数据渲染到页面上：\n    var html = '';\n    $.each(data, function(index, item) {\n      html += '<li>' + item.name + '</li>';\n    });\n    $('#list').html(html);\n  },\n  error: function(xhr, status, error) {\n    // 处理请求错误的回调函数\n    console.log(error);\n  }\n});\n"
+        }
+      ],
+      "id": "sAcJDFaN",
+      "createdAt": 1705548024545,
+      "updatedAt": 1705680788382
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "8qmQazwt",
+      "tagsIds": [],
+      "description": null,
+      "name": "fetch api",
+      "content": [
+        {
+          "label": "post-json",
+          "language": "javascript",
+          "value": "// create a JSON object\nconst json = {\n  email: 'hi@attacomsian.com',\n  password: '123abc'\n}\n\n// request options\nconst options = {\n  method: 'POST',\n  body: JSON.stringify(json),\n  headers: {\n    'Content-Type': 'application/json'\n  }\n}\n\n// send post request\nfetch('/login', options)\n  .then(res => res.json())\n  .then(res => console.log(res))\n  .catch(err => console.error(err))"
+        },
+        {
+          "label": "get",
+          "language": "javascript",
+          "value": "fetch('/js/users.json')\n  .then(response => {\n    // handle the response data\n  })\n  .catch(error => {\n    // handle errors\n  })\n  \nfetch('https://reqres.in/api/users')\n  .then(response => response.json())\n  .then(data => {\n    data.data.forEach(user => {\n      console.log(`${user.id}: ${user.first_name} ${user.last_name}`)\n    })\n  })"
+        },
+        {
+          "label": "header",
+          "language": "javascript",
+          "value": "// create an empty `Headers` object\nconst headers = new Headers()\n\n// add headers\nheaders.append('Content-Type', 'text/plain')\nheaders.append('Accept', 'application/json')\n\n// add custom headers\nheaders.append('X-AT-Platform', 'Desktop')\nheaders.append('X-AT-Source', 'Google Search')\n\n// check if the header exists\nheaders.has('Accept') // true\n\n// get headers\nheaders.get('Accept') // application/json\nheaders.get('X-AT-Source') // Google Search\n\n// update header value\nheaders.set('Content-Type', 'application/json')\n\n// remove headers\nheaders.delete('Content-Type')\nheaders.delete('X-AT-Platform')\n\n// Passing an object literal\nconst headers = new Headers({\n  'Content-Type': 'application/json',\n  Accept: 'application/json'\n})\n\n// OR\n\n// Passing an array of arrays\nconst headers = new Headers([\n  ['Content-Type', 'application/json'],\n  ['Accept', 'application/json']\n])\n\n// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\nconst request = new Request('https://reqres.in/api/users', {\n  headers: headers\n})\n\nfetch(request)\n  .then(res => res.json())\n  .then(json => console.log(json))\n  .catch(err => console.error('Error:', err))"
+        }
+      ],
+      "id": "klHkol_O",
+      "createdAt": 1705548237079,
+      "updatedAt": 1705681113608
+    },
+    {
+      "isDeleted": true,
+      "isFavorites": false,
+      "folderId": "OtjZFwbc",
+      "tagsIds": [],
+      "description": null,
+      "name": "Buffer",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "javascript",
+          "value": "let buf = Buffer.alloc(10);"
+        }
+      ],
+      "id": "D1oJIFA5",
+      "createdAt": 1705559765903,
+      "updatedAt": 1705559826668
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "yaml",
+      "content": [
+        {
+          "label": "read",
+          "language": "python",
+          "value": "import yaml\n\nwith open('voc.yaml', 'r', encoding='utf8') as f:\n\tdata = yaml.safe_load(f)"
+        },
+        {
+          "label": "write",
+          "language": "plain_text",
+          "value": "import yaml\n\n# 创建配置字典\nconfig = {\n    'database': {\n        'host': 'localhost',\n        'port': 5432,\n        'name': 'mydb'\n    },\n    'app': {\n        'debug': True,\n        'log_level': 'info'\n    }\n}\n\n# 写入 YAML 文件\nwith open('config.yaml', 'w') as yaml_file:\n    yaml.dump(config, yaml_file)"
+        }
+      ],
+      "id": "Gyt1iP24",
+      "createdAt": 1705649805191,
+      "updatedAt": 1705649964517
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "ruemal.yaml",
+      "content": [
+        {
+          "label": "read",
+          "language": "plain_text",
+          "value": "from ruamel.yaml import YAML\nyaml=YAML(typ='safe')\nwith open('conf.yaml', 'r') as yaml_file:\n\tconf = yaml.load(yaml_file)"
+        },
+        {
+          "label": "write",
+          "language": "plain_text",
+          "value": "import ruemal.yaml\n\n# 创建配置字典\nconfig = {\n    'database': {\n        'host': 'localhost',\n        'port': 5432,\n        'name': 'mydb'\n    },\n    'app': {\n        'debug': True,\n        'log_level': 'info'\n    }\n}\n\n# 写入 YAML 文件\nwith open('config.yaml', 'w') as yaml_file:\n    ruemal.yaml.dump(config, yaml_file)"
+        }
+      ],
+      "id": "veB74x97",
+      "createdAt": 1705649919184,
+      "updatedAt": 1705827167283
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "argparse",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "import argparse\nparser = argparse.ArgumentParser()\nparser.add_argument(\"--verbose\", help=\"increase output verbosity\",\n                    action=\"store_true\")\nargs = parser.parse_args()"
+        }
+      ],
+      "id": "UP1uoVQH",
+      "createdAt": 1705650796734,
+      "updatedAt": 1705650820168
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "NCg2YrWJ",
+      "tagsIds": [],
+      "description": null,
+      "name": "nvidia-smi",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "// 调整gpu持久性模式\nsudo nvidia-smi -pm 1\n// 调整gpu最大功率\nsudo nvidia-smi -pl 300"
+        }
+      ],
+      "id": "26X8AOSD",
+      "createdAt": 1705655898703,
+      "updatedAt": 1705655972195
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "fA481292",
+      "tagsIds": [],
+      "description": null,
+      "name": "http MIME",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "Multipurpose lnternet Mail Extensions:\n\nhtml: text/html\ncss: text/css\njs: text/javascript\npng: image/png\njpg: image/jpeg\ngif: image/gif\nmp4: video/mp4'\nmp3: audio/mpeg\njson: application/json"
+        }
+      ],
+      "id": "HnMsiaZI",
+      "createdAt": 1705739861641,
+      "updatedAt": 1705740021013
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "jupyter",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "%load_ext autoreload\n%autoreload 2"
+        }
+      ],
+      "id": "Wry74Dzx",
+      "createdAt": 1705886423955,
+      "updatedAt": 1705886427924
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "Path",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "file = Path('/root/data/voc.yaml')\nfile.stem => 'voc'"
+        }
+      ],
+      "id": "5e0YC450",
+      "createdAt": 1706190040944,
+      "updatedAt": 1706190107535
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "supression warning",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "import warnings \nwarnings.filterwarnings('ignore')"
+        }
+      ],
+      "id": "8qlwmnmh",
+      "createdAt": 1706193575402,
+      "updatedAt": 1706193582820
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "numpy",
+      "content": [
+        {
+          "label": "dim+",
+          "language": "plain_text",
+          "value": "ann = np.expand_dims(ann,0)"
+        },
+        {
+          "label": "min-max",
+          "language": "plain_text",
+          "value": "np.clip(a, 1, 8)"
+        },
+        {
+          "label": "eu dist",
+          "language": "python",
+          "value": "def euclidean_distance(u, v):\n    \"\"\"\n    Returns the euclidean distance between vectors u and v. This is equivalent\n    to the length of the vector (u - v).\n    \"\"\"\n    diff = u - v\n    # return sqrt(numpy.dot(diff, diff.T))\n    return np.sum(np.diag(np.sqrt(np.dot(diff, diff.T))))"
+        },
+        {
+          "label": "diag",
+          "language": "plain_text",
+          "value": "x=np.array([[0, 1, 2],\n       [3, 4, 5],\n       [6, 7, 8]])\nnp.diag(x) => array([0, 4, 8])"
+        }
+      ],
+      "id": "ZhL1nAet",
+      "createdAt": 1706504886238,
+      "updatedAt": 1706580864691
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "matplotlib",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# matplotlib折线图（标记点、标记点大小、标记点边颜色、标记点边宽\nfrom matplotlib import pyplot as plt\nx = range(1,10) #x轴的位置\ny = [6,7,12,12,15,17,15,20,18] #y轴的位置\n#传入x,y，通过plot画图,并设置折线颜色、透明度、折线样式和折线宽度  标记点、标记点大小、标记点边颜色、标记点边宽\nplt.plot(x,y,color='red',alpha=0.3,linestyle='--',linewidth=5,marker='o'\n         ,markeredgecolor='r',markersize='20',markeredgewidth=10)\nplt.show()\n"
+        }
+      ],
+      "id": "ZKxV4l_b",
+      "createdAt": 1706538922876,
+      "updatedAt": 1706538967381
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "torch",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "torch.cuda.empty_cache()"
+        }
+      ],
+      "id": "iUBzP4mv",
+      "createdAt": 1706543184905,
+      "updatedAt": 1706543192242
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "@thread",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "def threaded(func):\n    \"\"\"\n    Multi-threads a target function by default and returns the thread or function result.\n\n    Use as @threaded decorator. The function runs in a separate thread unless 'threaded=False' is passed.\n    \"\"\"\n\n    def wrapper(*args, **kwargs):\n        \"\"\"Multi-threads a given function based on 'threaded' kwarg and returns the thread or function result.\"\"\"\n        if kwargs.pop(\"threaded\", True):  # run in thread\n            thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)\n            thread.start()\n            return thread\n        else:\n            return func(*args, **kwargs)\n\n    return wrapper"
+        }
+      ],
+      "id": "CBAeSmOT",
+      "createdAt": 1706544304341,
+      "updatedAt": 1706544314752
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "multiprocessing",
+      "content": [
+        {
+          "label": "apply_async",
+          "language": "plain_text",
+          "value": "#apply  (非阻塞，异步方式)\nfrom  multiprocessing import Pool\nimport time\n \n#apply_async   (阻塞，同步方式)\ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\ndef f2(arg):\n    print(arg)\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply_async(func=f1,args=(i,),callback=f2)\n    pool.close()\n    pool.join()\n"
+        },
+        {
+          "label": "cpu_count",
+          "language": "plain_text",
+          "value": "from multiprocessing import cpu_count\n\nprint(\"CPU的核数为：{}\".format(cpu_count()))\nprint(type(cpu_count()))"
+        },
+        {
+          "label": "submit",
+          "language": "plain_text",
+          "value": "from concurrent.futures import ProcessPoolExecutor\nimport  time\ndef task(name):\n    print(\"name\",name)\n    time.sleep(1)\n\nif __name__ == \"__main__\":\n    start = time.time()\n    ex = ProcessPoolExecutor(2)\n\n    for i in range(5):\n        ex.submit(task,\"safly%d\"%i)\n    ex.shutdown(wait=True)\n\n    print(\"main\")\n    end = time.time()\n    print(end - start)"
+        },
+        {
+          "label": "map",
+          "language": "plain_text",
+          "value": "from multiprocessing import Pool\n\ndef f(x):\n    return x*x\n\nif __name__ == '__main__':\n    with Pool(5) as p:\n        print(p.map(f, [1, 2, 3]))"
+        },
+        {
+          "label": "apply",
+          "language": "plain_text",
+          "value": "#apply  (非阻塞，异步方式)\nfrom  multiprocessing import Pool\nimport time\n \ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply(func=f1,args=(i,))"
+        }
+      ],
+      "id": "CUsUEUiX",
+      "createdAt": 1706577534588,
+      "updatedAt": 1706579018164
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "concurrent",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "from concurrent.futures import ProcessPoolExecutor\nimport time, random, os\n\ndef piao(name, n):\n    print('%s is piaoing %s' % (name, os.getpid()))\n    time.sleep(1)\n    return n ** 2\n\n\nif __name__ == '__main__':\n    p = ProcessPoolExecutor(2)\n    objs = []\n    start = time.time()\n    for i in range(5):\n        obj = p.submit(piao, 'safly %s' % i, i)  # 异步调用\n        objs.append(obj)\n\n    p.shutdown(wait=True)\n    print('主', os.getpid())\n    for obj in objs:\n        print(obj.result())\n\n    stop = time.time()\n    print(stop - start)"
+        }
+      ],
+      "id": "v00hMsQs",
+      "createdAt": 1706578242881,
+      "updatedAt": 1706578249530
+    },
+    {
+      "isDeleted": true,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "未命名程式碼片段",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": ""
+        }
+      ],
+      "id": "RYf5I8fv",
+      "createdAt": 1706580332307,
+      "updatedAt": 1706580336957
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "OtjZFwbc",
+      "tagsIds": [],
+      "description": null,
+      "name": "guard process",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "var fork = require('child_process').fork;\n\n//保存被子进程实例数组\nvar workers = [];\n\n//这里的被子进程理论上可以无限多\nvar appsPath = ['./app.js'];\n\nvar createWorker = function(appPath){\n　　//保存fork返回的进程实例\n　　var worker = fork(appPath);\n\n　　//监听子进程exit事件\n　　worker.on('exit',function(){\n　　　　console.log('worker:' + worker.pid + 'exited');\n　　　　delete workers[worker.pid];\n　　　　createWorker(appPath);\n　　 });\n\n　　workers[worker.pid] = worker;\n　　console.log('Create worker:' + worker.pid);\n};\n\n//启动所有子进程\nfor (var i = appsPath.length - 1; i >= 0; i--) {\n　　createWorker(appsPath[i]);\n}\n\n//父进程退出时杀死所有子进程\nprocess.on('exit',function(){\n　　 for(var pid in workers){\n　　　　workers[pid].kill();\n　　}\n});"
+        }
+      ],
+      "id": "24sDH8Hh",
+      "createdAt": 1706666147942,
+      "updatedAt": 1706666155658
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "pickle",
+      "content": [
+        {
+          "label": "dump",
+          "language": "plain_text",
+          "value": "with open('data.pickle', 'wb') as f:\n    pickle.dump(data, f)"
+        },
+        {
+          "label": "dumps",
+          "language": "plain_text",
+          "value": "import pickle\ndic = {\"k1\":\"v1\",\"k2\":123}\ns = pickle.dumps(dic)\nprint(s)"
+        },
+        {
+          "label": "load",
+          "language": "plain_text",
+          "value": "with open('data.pickle', 'rb') as f:\n    data = pickle.load(f)"
+        },
+        {
+          "label": "loads",
+          "language": "plain_text",
+          "value": "import pickle\ndic = {\"k1\":\"v1\",\"k2\":123}\ns = pickle.dumps(dic)\ndic2 = pickle.loads(s)\nprint(dic2)"
+        }
+      ],
+      "id": "gw3WAZqO",
+      "createdAt": 1708936622268,
+      "updatedAt": 1708936691956
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "progress",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# coding=utf-8\nfrom progress.bar import Bar\nimport time\n\n# 创建Bar类的实例\nbar = Bar('MyProcess:', max=100)\n# 循环处理某业务，调用bar对象的next()方法，循环次数等于max\nfor _ in range(100):\n # Do some work\n    time.sleep(0.05)\n    bar.next()\n# 循环完成后调用finish()方法\nbar.finish()\n\n\nwith Bar('Processing', max=20) as bar:\n    for i in range(20):\n        time.sleep(0.05)\n        bar.next()\n        \nfor i in Bar(\n    \t\tf\"{image_set}{year}\", bar_prefix=\" [\", bar_suffix=\"] \", fill=\">\"\n    ).iter(range(100)):\n    time.sleep(0.05)"
+        }
+      ],
+      "id": "54MBrGJN",
+      "createdAt": 1709098599140,
+      "updatedAt": 1709989377044
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "get_VOC_ds",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import xml.etree.ElementTree as ET\n\nfrom tqdm import tqdm\nfrom ultralytics.utils.downloads import download\nfrom pathlib import Path\nimport yaml as yl\nimport numpy as np\nimport copy\nfrom progress.bar import Bar\nimport os\nimport subprocess\n\nwith open(\"voc.yaml\", \"r\", encoding=\"utf8\") as f:\n    yaml = yl.safe_load(f)\n\n\ndef convert_label(path, lb_path, year, image_id, tho=0, class_filter=None):\n    def convert_box(size, box):\n        dw, dh = 1.0 / size[0], 1.0 / size[1]\n        x, y, w, h = (\n            (box[0] + box[1]) / 2.0 - 1,\n            (box[2] + box[3]) / 2.0 - 1,\n            box[1] - box[0],\n            box[3] - box[2],\n        )\n        return x * dw, y * dh, w * dw, h * dh\n\n    in_file = open(path / f\"VOC{year}/Annotations/{image_id}.xml\")\n    out_file = open(lb_path, \"w\")\n    tree = ET.parse(in_file)\n    root = tree.getroot()\n    size = root.find(\"size\")\n    w = int(size.find(\"width\").text)\n    h = int(size.find(\"height\").text)\n\n    names = list(yaml[\"names\"].values())  # names list\n    for obj in root.iter(\"object\"):\n        cls = obj.find(\"name\").text\n        if cls in names and int(obj.find(\"difficult\").text) != 1:\n            xmlbox = obj.find(\"bndbox\")\n            bb = convert_box(\n                (w, h),\n                [float(xmlbox.find(x).text) for x in (\"xmin\", \"xmax\", \"ymin\", \"ymax\")],\n            )\n            cls_id = names.index(cls)  # class id\n            if class_filter:\n                if class_filter(cls_id):\n                    out_file.write(\" \".join(str(a) for a in (cls_id, *bb)) + \"\\n\")\n            else:\n                if np.random.random() >= tho:\n                    out_file.write(\" \".join(str(a) for a in (cls_id, *bb)) + \"\\n\")\n                else:\n                    out_file.write(\" \".join(str(a) for a in (0, *bb)) + \"\\n\")\n\n\n# Download\ndir = Path(yaml[\"path\"])  # dataset root dir\n# url = 'https://mirror.ghproxy.com/github.com/ultralytics/yolov5/releases/download/v1.0/'\nurl = \"https://github.com/ultralytics/yolov5/releases/download/v1.0/\"\nurls = [\n    f\"{url}VOCtrainval_06-Nov-2007.zip\",  # 446MB, 5012 images\n    f\"{url}VOCtest_06-Nov-2007.zip\",  # 438MB, 4953 images\n    f\"{url}VOCtrainval_11-May-2012.zip\",\n]  # 1.95GB, 17126 images\n# download(\n#     urls,\n#     dir=dir / \"images\",\n#     curl=True,\n#     threads=1,\n#     exist_ok=True,\n# )  # download and unzip over existing paths (required)\n\n# Convert origin\ndir = Path(yaml[\"path\"]) / \"origin\"\nos.makedirs(dir, exist_ok=True)\nsubprocess.run(\n    [\n        \"rsync\",\n        \"-auvrt\",\n        str((Path(yaml[\"path\"]) / \"images\").absolute()),\n        str(dir.absolute()),\n    ]\n)\npath = dir / \"images/VOCdevkit\"\nfor year, image_set in (\n    (\"2012\", \"train\"),\n    (\"2012\", \"val\"),\n    (\"2007\", \"train\"),\n    (\"2007\", \"val\"),\n    (\"2007\", \"test\"),\n):\n    imgs_path = dir / \"images\" / f\"{image_set}{year}\"\n    lbs_path = dir / \"labels\" / f\"{image_set}{year}\"\n    imgs_path.mkdir(exist_ok=True, parents=True)\n    lbs_path.mkdir(exist_ok=True, parents=True)\n\n    with open(path / f\"VOC{year}/ImageSets/Main/{image_set}.txt\") as f:\n        image_ids = f.read().strip().split()\n    for id in Bar(\n        f\"{image_set}{year}\", bar_prefix=\" [\", bar_suffix=\"] \", fill=\">\"\n    ).iter(image_ids):\n        f = path / f\"VOC{year}/JPEGImages/{id}.jpg\"  # old img path\n        lb_path = (lbs_path / f.name).with_suffix(\".txt\")  # new label path\n        f.rename(imgs_path / f.name)  # move image\n        convert_label(path, lb_path, year, id)  # convert labels to YOLO format\n    new_yaml = copy.deepcopy(yaml)\n    new_yaml[\"path\"] = dir.absolute()\n    with open(str(dir / \"data.yaml\"), \"w\") as yaml_file:\n        yl.dump(new_yaml, yaml_file)\n\n# Convert zen obj\ndir = Path(yaml[\"path\"]) / \"obj\"  # dataset root dir\nos.makedirs(dir, exist_ok=True)\nsubprocess.run(\n    [\n        \"rsync\",\n        \"-auvrt\",\n        str((Path(yaml[\"path\"]) / \"images\").absolute()),\n        str(dir.absolute()),\n    ]\n)\npath = dir / \"images/VOCdevkit\"\nfor year, image_set in (\n    (\"2012\", \"train\"),\n    (\"2012\", \"val\"),\n    (\"2007\", \"train\"),\n    (\"2007\", \"val\"),\n    (\"2007\", \"test\"),\n):\n    imgs_path = dir / \"images\" / f\"{image_set}{year}\"\n    lbs_path = dir / \"labels\" / f\"{image_set}{year}\"\n    imgs_path.mkdir(exist_ok=True, parents=True)\n    lbs_path.mkdir(exist_ok=True, parents=True)\n\n    with open(path / f\"VOC{year}/ImageSets/Main/{image_set}.txt\") as f:\n        image_ids = f.read().strip().split()\n    for id in Bar(\n        f\"{image_set}{year}\", bar_prefix=\" [\", bar_suffix=\"] \", fill=\">\"\n    ).iter(image_ids):\n        f = path / f\"VOC{year}/JPEGImages/{id}.jpg\"  # old img path\n        lb_path = (lbs_path / f.name).with_suffix(\".txt\")  # new label path\n        f.rename(imgs_path / f.name)  # move image\n        convert_label(path, lb_path, year, id, tho=1)  # convert labels to YOLO format\n    new_yaml = copy.deepcopy(yaml)\n    new_yaml[\"path\"] = dir.absolute()\n    new_yaml[\"names\"] = {0: \"unknown object\"}\n    for i in range(len(yaml[\"names\"])):\n        new_yaml[i + 1] = yaml[\"names\"][i]\n    with open(str(dir / \"data.yaml\"), \"w\") as yaml_file:\n        yl.dump(new_yaml, yaml_file)\n\n# Convert han obj\ndir = Path(yaml[\"path\"]) / \"obj_50pa\"  # dataset root dir\nos.makedirs(dir, exist_ok=True)\nsubprocess.run(\n    [\n        \"rsync\",\n        \"-auvrt\",\n        str((Path(yaml[\"path\"]) / \"images\").absolute()),\n        str(dir.absolute()),\n    ]\n)\npath = dir / \"images/VOCdevkit\"\nfor year, image_set in (\n    (\"2012\", \"train\"),\n    (\"2012\", \"val\"),\n    (\"2007\", \"train\"),\n    (\"2007\", \"val\"),\n    (\"2007\", \"test\"),\n):\n    imgs_path = dir / \"images\" / f\"{image_set}{year}\"\n    lbs_path = dir / \"labels\" / f\"{image_set}{year}\"\n    imgs_path.mkdir(exist_ok=True, parents=True)\n    lbs_path.mkdir(exist_ok=True, parents=True)\n\n    with open(path / f\"VOC{year}/ImageSets/Main/{image_set}.txt\") as f:\n        image_ids = f.read().strip().split()\n    for id in Bar(\n        f\"{image_set}{year}\", bar_prefix=\" [\", bar_suffix=\"] \", fill=\">\"\n    ).iter(image_ids):\n        f = path / f\"VOC{year}/JPEGImages/{id}.jpg\"  # old img path\n        lb_path = (lbs_path / f.name).with_suffix(\".txt\")  # new label path\n        f.rename(imgs_path / f.name)  # move image\n        convert_label(path, lb_path, year, id, tho=0.5)  # convert labels to YOLO format\n    new_yaml = copy.deepcopy(yaml)\n    new_yaml[\"path\"] = dir.absolute()\n    new_yaml[\"names\"] = {0: \"unknown object\"}\n    for i in range(len(yaml[\"names\"])):\n        new_yaml[i + 1] = yaml[\"names\"][i]\n    with open(str(dir / \"data.yaml\"), \"w\") as yaml_file:\n        yl.dump(new_yaml, yaml_file)\n\n# Convert continous learning dataset\nclass_stage = [[0, 6], [6, 13], [13, 20]]\nfor i, j in class_stage:\n    class_filter_testval = lambda x: x < j\n    class_filter_train = lambda x: x >= i and x < j\n    dir = Path(yaml[\"path\"]) / f\"split_{i}_{j}\"  # dataset root dir\n    os.makedirs(dir, exist_ok=True)\n    subprocess.run(\n        [\n            \"rsync\",\n            \"-auvrt\",\n            str((Path(yaml[\"path\"]) / \"images\").absolute()),\n            str(dir.absolute()),\n        ]\n    )\n    path = dir / \"images/VOCdevkit\"\n    for year, image_set in (\n        (\"2012\", \"train\"),\n        (\"2012\", \"val\"),\n        (\"2007\", \"train\"),\n        (\"2007\", \"val\"),\n        (\"2007\", \"test\"),\n    ):\n        imgs_path = dir / \"images\" / f\"{image_set}{year}\"\n        lbs_path = dir / \"labels\" / f\"{image_set}{year}\"\n        imgs_path.mkdir(exist_ok=True, parents=True)\n        lbs_path.mkdir(exist_ok=True, parents=True)\n\n        with open(path / f\"VOC{year}/ImageSets/Main/{image_set}.txt\") as f:\n            image_ids = f.read().strip().split()\n\n        for id in Bar(\n            f\"{image_set}{year}\", bar_prefix=\" [\", bar_suffix=\"] \", fill=\">\"\n        ).iter(image_ids):\n            f = path / f\"VOC{year}/JPEGImages/{id}.jpg\"  # old img path\n            lb_path = (lbs_path / f.name).with_suffix(\".txt\")  # new label path\n            f.rename(imgs_path / f.name)  # move image\n            convert_label(\n                path,\n                lb_path,\n                year,\n                id,\n                class_filter=(\n                    class_filter_testval if image_set == \"test\" else class_filter_train\n                ),\n            )  # convert labels to YOLO format\n        new_yaml = copy.deepcopy(yaml)\n        new_yaml[\"path\"] = dir.absolute()\n        new_yaml[\"names\"] = {}\n        for ii in range(j):\n            new_yaml[ii] = yaml[\"names\"][ii]\n        with open(str(dir / \"data.yaml\"), \"w\") as yaml_file:\n            yl.dump(new_yaml, yaml_file)\n"
+        }
+      ],
+      "id": "SRdwFBY0",
+      "createdAt": 1709358035263,
+      "updatedAt": 1709358060472
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "NCg2YrWJ",
+      "tagsIds": [],
+      "description": null,
+      "name": "shell echo font",
+      "content": [
+        {
+          "label": "color",
+          "language": "plain_text",
+          "value": "字体颜色\n字体颜色：30-37\n\n默认=0\n黑色=30\n红色=31\n绿色=32\n黄色=33\n蓝色=34\n紫色=35\n天蓝色（青色）=36\n白色=37\n# echo -e \"\\e[30m 黑色 \\e[0m\"\n# echo -e \"\\e[31m 红色 \\e[0m\"\n# echo -e \"\\e[32m 绿色 \\e[0m\"\n# echo -e \"\\e[33m 黄色 \\e[0m\"\n# echo -e \"\\e[34m 蓝色 \\e[0m\"\n# echo -e \"\\e[35m 紫色 \\e[0m\"\n# echo -e \"\\e[36m 青色 \\e[0m\"\n# echo -e \"\\e[37m 白色 \\e[0m\"\n\n背景颜色\n背景颜色：40-47\n\n默认=0\n黑色=40\n红色=41\n绿色=42\n黄色=43\n蓝色=44\n紫色=45\n天蓝色（青色）=46\n白色=47\n# echo -e \"\\e[40m 黑底 \\e[0m\"\n# echo -e \"\\e[41m 红底 \\e[0m\"\n# echo -e \"\\e[42m 绿底 \\e[0m\"\n# echo -e \"\\e[43m 黄底 \\e[0m\"\n# echo -e \"\\e[44m 蓝底 \\e[0m\"\n# echo -e \"\\e[45m 紫底 \\e[0m\"\n# echo -e \"\\e[46m 青底 \\e[0m\"\n# echo -e \"\\e[47m 白底 \\e[0m\"\n\n黑底彩色\n黑底彩色：90-97\n\n黑=90\n深红=91\n绿=92\n黄色=93\n蓝色=94\n紫色=95\n深绿（青色）=96\n白色=97\n# echo -e \"\\e[90m 黑底黑字 \\e[0m\"\n# echo -e \"\\e[91m 黑底红字 \\e[0m\"\n# echo -e \"\\e[92m 黑底绿字 \\e[0m\"\n# echo -e \"\\e[93m 黑底黄字 \\e[0m\"\n# echo -e \"\\e[94m 黑底蓝字 \\e[0m\"\n# echo -e \"\\e[95m 黑底紫字 \\e[0m\"\n# echo -e \"\\e[96m 黑底青字 \\e[0m\"\n# echo -e \"\\e[97m 黑底白字 \\e[0m\"\n\n## 字体控制选项\n\\e[0m 关闭所有属性\n\\e[1m 设置高亮度\n\\e[4m 下划线\n\\e[5m 闪烁\n\\e[7m 反显，撞色显示，显示为白字黑底，或者显示为黑底白字\n\\e[8m 消影，字符颜色将会与背景颜色相同\n\\e[nA 光标上移 n 行\n\\e[nB 光标下移 n 行\n\\e[nC 光标右移 n 行\n\\e[nD 光标左移 n 行\n\\e[y;xH 设置光标位置\n\\e[2J 清屏\n\\e[K 清除从光标到行尾的内容\n\\e[s 保存光标位置\n\\e[u 恢复光标位置\n\\e[?25 隐藏光标\n\\e[?25h 显示光标"
+        },
+        {
+          "label": "子片段 2",
+          "language": "plain_text",
+          "value": ""
+        }
+      ],
+      "id": "blnb3Iy1",
+      "createdAt": 1709523344717,
+      "updatedAt": 1709523454756
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "NCg2YrWJ",
+      "tagsIds": [],
+      "description": null,
+      "name": "tput",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "tput Color Capabilities:\n\ntput setab [0-7] – Set a background color using ANSI escape\ntput setb [0-7] – Set a background color\ntput setaf [0-7] – Set a foreground color using ANSI escape\ntput setf [0-7] – Set a foreground color\n\nColor Code for tput:\n\n0 – Black\n1 – Red\n2 – Green\n3 – Yellow\n4 – Blue\n5 – Magenta\n6 – Cyan\n7 – White\n\ntput Text Mode Capabilities:\n\ntput bold – Set bold mode\ntput dim – turn on half-bright mode\ntput smul – begin underline mode\ntput rmul – exit underline mode\ntput rev – Turn on reverse mode\ntput smso – Enter standout mode (bold on rxvt)\ntput rmso – Exit standout mode\ntput sgr0 – Turn off all attributes"
+        },
+        {
+          "label": "子片段 2",
+          "language": "sh",
+          "value": "#!/bin/bash\n\nprintf $(tput setaf 2; tput bold)'color show\\n\\n'$(tput sgr0)\n\nfor((i=0; i<=7; i++)); do\n\techo $(tput setaf $i)\"show me the money\"$(tput sgr0)\ndone\n\nprintf '\\n'$(tput setaf 2; tput setab 0; tput bold)'background color show'$(tput sgr0)'\\n\\n'\n\nfor((i=0,j=7; i<=7; i++,j--)); do\n\techo $(tput setaf $i; tput setab $j; tput bold)\"show me the money\"$(tput sgr0)\ndone\n\nexit 0\n"
+        }
+      ],
+      "id": "rl2tSchb",
+      "createdAt": 1709523474208,
+      "updatedAt": 1709526826833
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "RxpfS9zV",
+      "tagsIds": [],
+      "description": null,
+      "name": "遍历数组",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "typescript",
+          "value": "/*TypeScript继承自JavaScript，因此可以使用JavaScript中的所有数组遍历方法，包括：\n\nfor循环\n可以使用传统的for循环遍历数组。例如：*/\n\nconst arr: number[] = [1, 2, 3, 4, 5];\n\nfor (let i = 0; i < arr.length; i++) {\n  console.log(arr[i]);\n}\n/*forEach()方法\n可以使用forEach()方法遍历数组，它接受一个回调函数作为参数，回调函数接受三个参数：当前元素的值、当前元素的索引和数组本身。例如：*/\n\nconst arr: number[] = [1, 2, 3, 4, 5];\n\narr.forEach((value, index, array) => {\n  console.log(value);\n});\n/*map()方法\n可以使用map()方法遍历数组，它接受一个回调函数作为参数，回调函数返回一个新的数组，新数组的元素是根据原数组的元素经过处理后得到的。例如：*/\n\nconst arr: number[] = [1, 2, 3, 4, 5];\n\nconst newArr = arr.map((value, index, array) => {\n  return value * 2;\n});\n\nconsole.log(newArr);\n/*filter()方法\n可以使用filter()方法遍历数组，它接受一个回调函数作为参数，回调函数返回一个布尔值，表示当前元素是否应该被包含在新的数组中。例如：*/\n\nconst arr: number[] = [1, 2, 3, 4, 5];\n\nconst filteredArr = arr.filter((value, index, array) => {\n  return value % 2 === 0;\n});\n\nconsole.log(filteredArr);\n/*reduce()方法\n可以使用reduce()方法遍历数组，它接受一个回调函数作为参数，回调函数接受四个参数：累加器、当前元素的值、当前元素的索引和数组本身。回调函数返回的值作为下一次调用回调函数的累加器的值。例如：*/\n\nconst arr: number[] = [1, 2, 3, 4, 5];\n\nconst sum = arr.reduce((accumulator, currentValue, currentIndex, array) => {\n  return accumulator + currentValue;\n}, 0);\n\nconsole.log(sum);\n/*还有其他一些数组遍历方法，如some()、every()、find()、findIndex()等，它们的使用方法与上述方法类似，根据实际需求选择适合的方法即可。*/"
+        }
+      ],
+      "id": "_qQRFf4S",
+      "createdAt": 1709687898236,
+      "updatedAt": 1709687973606
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "lxml",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "from lxml import etree\n\nroot=etree.Element('root')\nprint(root.tag)\nchild=etree.SubElement(root,'child') # 添加一个子节点\nchild.set('id','test_Id')\nprint(etree.tostring(root))          # tostring 为序列化"
+        },
+        {
+          "label": "xpath",
+          "language": "python",
+          "value": "from lxml import etree\n\nhtml = etree.parse('./test.html', etree.HTMLParser())\nresult = etree.tostring(html)\nprint(result.decode('utf-8'))"
+        }
+      ],
+      "id": "sVMMZEu2",
+      "createdAt": 1709787008159,
+      "updatedAt": 1710954937124
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "snowflake",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# pip install snowflake-id\nfrom snowflake import SnowflakeGenerator\n\ngen = SnowflakeGenerator(42)\n\nfor i in range(100):\n    val = next(gen)\n    print(val)"
+        }
+      ],
+      "id": "izjU0ZO0",
+      "createdAt": 1710000893638,
+      "updatedAt": 1710000948908
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "Process",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# 导入进程模块\nimport multiprocessing\n \n# 最多允许3个进程同时运行\npool = multiprocessing.Pool(processes = 3)\n \n1、apply() — 该函数用于传递不定参数，主进程会被阻塞直到函数执行结束（不建议使用，并且3.x以后不在出现），函数原型如下：\n\napply(func, args=(), kwds={})\n2、apply_async — 与apply用法一致，但它是非阻塞的且支持结果返回后进行回调，函数原型如下：\n\napply_async(func[, args=()[, kwds={}[, callback=None]]])\n3、map() — Pool类中的map方法，与内置的map函数用法基本一致，它会使进程阻塞直到结果返回，函数原型如下：\n\nmap(func, iterable, chunksize=None)\n注意：虽然第二个参数是一个迭代器，但在实际使用中，必须在整个队列都就绪后，程序才会运行子进程。\n\n4、map_async() — 与map用法一致，但是它是非阻塞的。其有关事项见apply_async，函数原型如下：\n\nmap_async(func, iterable, chunksize, callback)\n5、close() — 关闭进程池（pool），使其不在接受新的任务。\n\n6、terminal() — 结束工作进程，不在处理未处理的任务。\n\n7、join() — 主进程阻塞等待子进程的退出， join方法要在close或terminate之后使用。"
+        }
+      ],
+      "id": "lapLuKwb",
+      "createdAt": 1710003507218,
+      "updatedAt": 1710003515804
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "sqlite3",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import sqlite3\ncon = sqlite3.connect(\"tutorial.db\")\n\ncur = con.cursor()\ncur.execute(\"CREATE TABLE movie(title, year, score)\")\nres = cur.execute(\"SELECT name FROM sqlite_master\")\nres.fetchone()"
+        }
+      ],
+      "id": "jftvFjm0",
+      "createdAt": 1710206891856,
+      "updatedAt": 1710206929164
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "HRD2NCV8",
+      "tagsIds": [],
+      "description": null,
+      "name": "gpupdate /force",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "powershell",
+          "value": "gpupdate /force"
+        }
+      ],
+      "id": "59rdBTM8",
+      "createdAt": 1711067467424,
+      "updatedAt": 1711067493810
+    }
+  ],
+  "tags": [
+    {
+      "name": "normal usage",
+      "id": "7xSxQ3Xg",
+      "createdAt": 1705650814819,
+      "updatedAt": 1705650814819
+    }
+  ]
+}
