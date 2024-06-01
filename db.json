@@ -290,14 +290,19 @@
       "name": "jupyter",
       "content": [
         {
-          "label": "子片段 1",
+          "label": "reload",
           "language": "plain_text",
           "value": "%load_ext autoreload\n%autoreload 2"
+        },
+        {
+          "label": "plot",
+          "language": "python",
+          "value": "%matplotlib inline"
         }
       ],
       "id": "Wry74Dzx",
       "createdAt": 1705886423955,
-      "updatedAt": 1705886427924
+      "updatedAt": 1711760156929
     },
     {
       "isDeleted": false,
@@ -328,12 +333,12 @@
         {
           "label": "子片段 1",
           "language": "plain_text",
-          "value": "import warnings \nwarnings.filterwarnings('ignore')"
+          "value": "import warnings\n\nwarnings.filterwarnings('ignore')\n\nwarnings.filterwarnings(\"ignore\", category=UserWarning)"
         }
       ],
       "id": "8qlwmnmh",
       "createdAt": 1706193575402,
-      "updatedAt": 1706193582820
+      "updatedAt": 1715651037810
     },
     {
       "isDeleted": false,
@@ -741,6 +746,24 @@
       "id": "59rdBTM8",
       "createdAt": 1711067467424,
       "updatedAt": 1711067493810
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "glob",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import glob\n\n1、返回目录的路径列表\n\npath_list1 = glob.glob('./test_dir/')\n\npath_list2 = glob.glob('./test_dir/*')\n\npath_list3 = glob.glob('./test_dir/*.py')\n\npath_list4 = glob.glob('./test_dir/*/*.py')\n\npath_list5 = glob.glob('./test_dir/**', recursive=True)\n\npath_list6 = glob.glob('./test_dir/**/*.py', recursive=True)"
+        }
+      ],
+      "id": "Ld88RgtY",
+      "createdAt": 1715163051153,
+      "updatedAt": 1715163101262
     }
   ],
   "tags": [
