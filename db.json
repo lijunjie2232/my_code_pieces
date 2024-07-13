@@ -459,11 +459,16 @@
           "label": "apply",
           "language": "plain_text",
           "value": "#apply  (非阻塞，异步方式)\nfrom  multiprocessing import Pool\nimport time\n \ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply(func=f1,args=(i,))"
+        },
+        {
+          "label": "imap",
+          "language": "python",
+          "value": "from tqdm import tqdm    \nfrom torch.multiprocessing import Pool\n\nwith Pool(15) as pool:\n    results = pool.imap(func=get_image_sm, iterable=zip(repeat(path), image_list))\n    pbar = tqdm(results, desc=\"calc\", total=len(image_list))\n    for result in pbar:\n        if isinstance(result, tuple):\n            img_count += 1\n            mean += result[0]\n            std += result[1]\n            pbar.set_postfix({\"mean\": mean / img_count, \"std\": std / img_count})\n        else:\n            print(result)\n    pbar.close()"
         }
       ],
       "id": "CUsUEUiX",
       "createdAt": 1706577534588,
-      "updatedAt": 1706579018164
+      "updatedAt": 1720873914612
     },
     {
       "isDeleted": false,
