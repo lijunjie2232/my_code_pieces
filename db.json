@@ -30,7 +30,8 @@
       "defaultLanguage": "plain_text",
       "id": "OtjZFwbc",
       "createdAt": 1705559758412,
-      "updatedAt": 1705559762435
+      "updatedAt": 1705559762435,
+      "index": 2
     },
     {
       "name": "python",
@@ -40,7 +41,8 @@
       "defaultLanguage": "python",
       "id": "weWtbZI4",
       "createdAt": 1705649797466,
-      "updatedAt": 1709526488611
+      "updatedAt": 1709526488611,
+      "index": 3
     },
     {
       "name": "linux",
@@ -50,7 +52,8 @@
       "defaultLanguage": "sh",
       "id": "NCg2YrWJ",
       "createdAt": 1705655890816,
-      "updatedAt": 1709526511683
+      "updatedAt": 1709526511683,
+      "index": 4
     },
     {
       "name": "web",
@@ -60,7 +63,8 @@
       "defaultLanguage": "plain_text",
       "id": "fA481292",
       "createdAt": 1705739854728,
-      "updatedAt": 1705739858907
+      "updatedAt": 1705739858907,
+      "index": 5
     },
     {
       "name": "ts",
@@ -70,7 +74,8 @@
       "defaultLanguage": "typescript",
       "id": "RxpfS9zV",
       "createdAt": 1709687889308,
-      "updatedAt": 1709687938343
+      "updatedAt": 1709687938343,
+      "index": 6
     },
     {
       "name": "cmd",
@@ -80,7 +85,8 @@
       "defaultLanguage": "powershell",
       "id": "HRD2NCV8",
       "createdAt": 1711067461127,
-      "updatedAt": 1711067487711
+      "updatedAt": 1711067487711,
+      "index": 7
     },
     {
       "name": "algo",
@@ -90,7 +96,19 @@
       "defaultLanguage": "c_cpp",
       "id": "4ojt5eME",
       "createdAt": 1720877654533,
-      "updatedAt": 1720877817895
+      "updatedAt": 1720877817895,
+      "index": 8
+    },
+    {
+      "name": "deeplearning",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "python",
+      "id": "DvcfGvIx",
+      "createdAt": 1724574331649,
+      "updatedAt": 1724574577063,
+      "index": 9
     }
   ],
   "snippets": [
@@ -246,14 +264,19 @@
       "name": "argparse",
       "content": [
         {
-          "label": "子片段 1",
+          "label": "basic",
           "language": "plain_text",
           "value": "import argparse\nparser = argparse.ArgumentParser()\nparser.add_argument(\"--verbose\", help=\"increase output verbosity\",\n                    action=\"store_true\")\nargs = parser.parse_args()"
+        },
+        {
+          "label": "list",
+          "language": "python",
+          "value": "import argparse\n \nparser = argparse.ArgumentParser()\n \n# By default it will fail with multiple arguments.\nparser.add_argument('--default')\n \n# Telling the type to be a list will also fail for multiple arguments,\n# but give incorrect results for a single argument.\nparser.add_argument('--list-type', type=list)\n \n# This will allow you to provide multiple arguments, but you will get\n# a list of lists which is not desired.\nparser.add_argument('--list-type-nargs', type=list, nargs='+')\n \n# This is the correct way to handle accepting multiple arguments.\n# '+' == 1 or more.\n# '*' == 0 or more.\n# '?' == 0 or 1.\n# An int is an explicit number of arguments to accept.\nparser.add_argument('--nargs', nargs='+')\n \n# To make the input integers\nparser.add_argument('--nargs-int-type', nargs='+', type=int)\n \n# An alternate way to accept multiple inputs, but you must\n# provide the flag once per input. Of course, you can use\n# type=int here if you want.\nparser.add_argument('--append-action', action='append')\n \n# To show the results of the given option to screen.\nfor _, value in parser.parse_args()._get_kwargs():\n    if value is not None:\n        print(value)\n        \n        \n\"\"\"\n$ python arg.py --default 1234 2345 3456 4567\n...\narg.py: error: unrecognized arguments: 2345 3456 4567\n \n$ python arg.py --list-type 1234 2345 3456 4567\n...\narg.py: error: unrecognized arguments: 2345 3456 4567\n \n$ # Quotes won't help here... \n$ python arg.py --list-type \"1234 2345 3456 4567\"\n['1', '2', '3', '4', ' ', '2', '3', '4', '5', ' ', '3', '4', '5', '6', ' ', '4', '5', '6', '7']\n$ python arg.py --list-type-nargs 1234 2345 3456 4567\n[['1', '2', '3', '4'], ['2', '3', '4', '5'], ['3', '4', '5', '6'], ['4', '5', '6', '7']]\n$ python arg.py --nargs 1234 2345 3456 4567\n['1234', '2345', '3456', '4567']\n$ python arg.py --nargs-int-type 1234 2345 3456 4567\n[1234, 2345, 3456, 4567]\n$ # Negative numbers are handled perfectly fine out of the box.\n$ python arg.py --nargs-int-type -1234 2345 -3456 4567\n[-1234, 2345, -3456, 4567]\n$ python arg.py --append-action 1234 --append-action 2345 --append-action 3456 --append-action 4567\n\"\"\""
         }
       ],
       "id": "UP1uoVQH",
       "createdAt": 1705650796734,
-      "updatedAt": 1705650820168
+      "updatedAt": 1724577088639
     },
     {
       "isDeleted": false,
@@ -593,7 +616,7 @@
     {
       "isDeleted": false,
       "isFavorites": false,
-      "folderId": "weWtbZI4",
+      "folderId": "DvcfGvIx",
       "tagsIds": [],
       "description": null,
       "name": "get_VOC_ds",
@@ -606,7 +629,7 @@
       ],
       "id": "SRdwFBY0",
       "createdAt": 1709358035263,
-      "updatedAt": 1709358060472
+      "updatedAt": 1724662697548
     },
     {
       "isDeleted": false,
@@ -874,6 +897,139 @@
       "id": "60pjlgt8",
       "createdAt": 1722057259380,
       "updatedAt": 1722057293355
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "json objectification",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": ""
+        }
+      ],
+      "id": "kmrtyaUH",
+      "createdAt": 1724574340170,
+      "updatedAt": 1724574347941
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "logging",
+      "content": [
+        {
+          "label": "basic",
+          "language": "python",
+          "value": "import logging\n\nLOG_FORMAT = \"%(asctime)s - %(levelname)s - %(message)s\"\nDATE_FORMAT = \"%m/%d/%Y %H:%M:%S %p\"\n\nlogging.basicConfig(filename='my.log', level=logging.DEBUG, format=LOG_FORMAT, datefmt=DATE_FORMAT)\n\nlogging.debug(\"This is a debug log.\")\nlogging.info(\"This is a info log.\")\nlogging.warning(\"This is a warning log.\")\nlogging.error(\"This is a error log.\")\nlogging.critical(\"This is a critical log.\")"
+        },
+        {
+          "label": "advanced",
+          "language": "python",
+          "value": "import logging\nimport logging.handlers\nimport datetime\n\nlogger = logging.getLogger('mylogger')\nlogger.setLevel(logging.DEBUG)\n\nrf_handler = logging.handlers.TimedRotatingFileHandler('all.log', when='midnight', interval=1, backupCount=7, atTime=datetime.time(0, 0, 0, 0))\nrf_handler.setFormatter(logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\"))\n\nf_handler = logging.FileHandler('error.log')\nf_handler.setLevel(logging.ERROR)\nf_handler.setFormatter(logging.Formatter(\"%(asctime)s - %(levelname)s - %(filename)s[:%(lineno)d] - %(message)s\"))\n\nlogger.addHandler(rf_handler)\nlogger.addHandler(f_handler)\n\nlogger.debug('debug message')\nlogger.info('info message')\nlogger.warning('warning message')\nlogger.error('error message')\nlogger.critical('critical message')"
+        },
+        {
+          "label": "调用subprocess 使用logging打印日志",
+          "language": "python",
+          "value": "import sys\nimport logging\nfrom logging.handlers import TimedRotatingFileHandler\nimport os\nfrom subprocess import Popen, PIPE, STDOUT\nreload(sys)\nsys.setdefaultencoding('utf8')\n\n\nLOG_FILE_NAME = 'send_snmp_trap.log'\nlogger = logging.getLogger('SenSNMPTrap.py')\nlogger.setLevel(level=logging.INFO)\nformatter = logging.Formatter('%(asctime)s - %(name)s - %(funcName)s - %(process)d - %(levelname)s - %(message)s')\nLOG_PATH = os.path.join('/tmp', LOG_FILE_NAME)\n\n# 每天午夜更新日志文件\nhandler = TimedRotatingFileHandler(LOG_PATH, when='midnight', backupCount=3, )\nhandler.setLevel(logging.INFO)\nhandler.setFormatter(formatter)\nlogger.addHandler(handler)\n\nconsole = logging.StreamHandler()\nconsole.setLevel(logging.INFO)\nconsole.setFormatter(formatter)\n# 输出到屏幕\nlogger.addHandler(console)\n\n\ndef log_subprocess_output(pipe):\n    for line in iter(pipe.readline, b''):  # b'\\n'-separated lines\n        logger.info('got line from subprocess: %r', line)\n\n\ndef run_command(command_line_args):\n    process = Popen(command_line_args, stdout=PIPE, stderr=STDOUT)\n    with process.stdout:\n        log_subprocess_output(process.stdout)\n    exitcode = process.wait()  # 0 means success\n    if exitcode == 0:\n        logger.info('success')\n    else:\n        logger.error(\"failed\")\n\nrun_command(command_line_args=['ls', '/tp/'])"
+        }
+      ],
+      "id": "w2BFB5oy",
+      "createdAt": 1724574359923,
+      "updatedAt": 1724831165349
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "yolov5_to_coco",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# -*- encoding: utf-8 -*-\n# @File: yolov5_2_coco.py\n# @Author: lijunjie2232\n# @Contact: git@lijunjie2232\n\nimport argparse\nimport json\nimport shutil\nimport time\nimport warnings\nfrom pathlib import Path\n\nimport cv2\nfrom tqdm import tqdm\nimport yaml\n\nclass YOLOV5ToCOCO():\n    def __init__(self, data_dir):\n        self.raw_data_dir = Path(data_dir)\n\n        self.verify_exists(self.raw_data_dir / 'images')\n        self.verify_exists(self.raw_data_dir / 'labels')\n\n        save_dir_name = f'{Path(self.raw_data_dir).name}_COCO_format'\n        self.output_dir = self.raw_data_dir.parent / save_dir_name\n        self.mkdir(self.output_dir)\n\n        self._init_json()\n\n    def __call__(self, mode_list: list):\n        if not mode_list:\n            raise ValueError('mode_list is empty!!')\n\n        for mode in mode_list:\n            # Read the image txt.\n            txt_path = self.raw_data_dir / f'{mode}.txt'\n            self.verify_exists(txt_path)\n            img_list = self.read_txt(txt_path)\n            if mode == 'train':\n                img_list = self.append_bg_img(img_list)\n\n            # Create the directory of saving the new image.\n            save_img_dir = self.output_dir / f'{mode}2017'\n            self.mkdir(save_img_dir)\n\n            # Generate json file.\n            anno_dir = self.output_dir / \"annotations\"\n            self.mkdir(anno_dir)\n\n            save_json_path = anno_dir / f'instances_{mode}2017.json'\n            json_data = self.convert(img_list, save_img_dir, mode)\n\n            self.write_json(save_json_path, json_data)\n        print(f'Successfully convert, detail in {self.output_dir}')\n\n    def _init_json(self):\n        classes_path = self.raw_data_dir / 'classes.txt'\n        data_yaml_path = self.raw_data_dir / 'data.yaml'\n        if self.verify_exists(classes_path, raise_if_ne=False):\n            self.categories = self._get_category(classes_path)\n        elif self.verify_exists(data_yaml_path, raise_if_ne=False):\n            self.categories = self._get_category(data_yaml_path)\n        else:\n            raise(Exception('no dataset info file found'))\n\n        self.type = 'instances'\n        self.annotation_id = 1\n\n        self.cur_year = time.strftime('%Y', time.localtime(time.time()))\n        self.info = {\n            'year': int(self.cur_year),\n            'version': '1.0',\n            'description': 'For object detection',\n            'date_created': self.cur_year,\n        }\n\n        self.licenses = [{\n            'id': 1,\n            'name': 'Apache License v2.0',\n            'url': 'https://github.com/RapidAI/YOLO2COCO/LICENSE',\n        }]\n\n    def append_bg_img(self, img_list):\n        bg_dir = self.raw_data_dir / 'background_images'\n        if bg_dir.exists():\n            bg_img_list = list(bg_dir.iterdir())\n            for bg_img_path in bg_img_list:\n                img_list.append(str(bg_img_path))\n        return img_list\n\n    def _get_category(self, classes_path):\n        if classes_path.name.endswith('txt'):\n            class_list = self.read_txt(classes_path)\n        elif classes_path.name.endswith('yaml'):\n            with open(classes_path, 'r', encoding='utf-8') as f:\n                y = yaml.safe_load(f)\n            class_list = y['names']\n        else:\n            raise(Exception('invalid dataset info file'))\n        categories = []\n        for i, category in enumerate(class_list, 1):\n            categories.append({\n                'supercategory': category,\n                'id': i,\n                'name': category,\n            })\n        return categories\n\n    def convert(self, img_list, save_img_dir, mode):\n        images, annotations = [], []\n        cvt_process = tqdm(img_list, desc=mode)\n        anno_nums = 0\n        for img_id, img_path in enumerate(cvt_process, 1):\n            \n            image_dict = self.get_image_info(img_path, img_id, save_img_dir)\n            images.append(image_dict)\n\n            label_path = self.raw_data_dir / 'labels' / f'{Path(img_path).stem}.txt'\n            annotation = self.get_annotation(label_path,\n                                             img_id,\n                                             image_dict['height'],\n                                             image_dict['width'])\n            if len(annotation) > 0:\n                annotations.extend(annotation)\n                anno_nums += len(annotation)\n            \n            cvt_process.set_postfix(\n                {\n                    'processed': Path(img_path).name,\n                    'anno numbers': anno_nums,\n                }\n            )\n\n        json_data = {\n            'info': self.info,\n            'images': images,\n            'licenses': self.licenses,\n            'type': self.type,\n            'annotations': annotations,\n            'categories': self.categories,\n        }\n        return json_data\n\n    def get_image_info(self, img_path, img_id, save_img_dir):\n        img_path = Path(img_path)\n        if self.raw_data_dir.as_posix() not in img_path.as_posix():\n            # relative path (relative to the raw_data_dir)\n            # e.g. images/images(3).jpg\n            img_path = self.raw_data_dir / img_path\n\n        self.verify_exists(img_path)\n\n        new_img_name = f'{img_id:012d}.jpg'\n        save_img_path = save_img_dir / new_img_name\n        img_src = cv2.imread(str(img_path))\n        if img_path.suffix.lower() == \".jpg\":\n            shutil.copyfile(img_path, save_img_path)\n        else:\n            cv2.imwrite(str(save_img_path), img_src)\n\n        height, width = img_src.shape[:2]\n        image_info = {\n            'date_captured': self.cur_year,\n            'file_name': new_img_name,\n            'id': img_id,\n            'height': height,\n            'width': width,\n        }\n        return image_info\n\n    def get_annotation(self, label_path: Path, img_id, height, width):\n        def get_box_info(vertex_info, height, width):\n            cx, cy, w, h = [float(i) for i in vertex_info]\n\n            cx = cx * width\n            cy = cy * height\n            box_w = w * width\n            box_h = h * height\n\n            # left top\n            x0 = max(cx - box_w / 2, 0)\n            y0 = max(cy - box_h / 2, 0)\n\n            # right bottom\n            x1 = min(x0 + box_w, width)\n            y1 = min(y0 + box_h, height)\n\n            segmentation = [[x0, y0, x1, y0, x1, y1, x0, y1]]\n            bbox = [x0, y0, box_w, box_h]\n            area = box_w * box_h\n            return segmentation, bbox, area\n\n        if not label_path.exists():\n            # annotation = [{\n            #     'segmentation': [],\n            #     'area': 0,\n            #     'iscrowd': 0,\n            #     'image_id': img_id,\n            #     'bbox': [],\n            #     'category_id': -1,\n            #     'id': self.annotation_id,\n            # }]\n            # self.annotation_id += 1\n            # return annotation\n            return []\n\n        annotation = []\n        label_list = self.read_txt(str(label_path))\n        for i, one_line in enumerate(label_list):\n            label_info = one_line.split(' ')\n            if len(label_info) < 5:\n                warnings.warn(\n                    f'The {i+1} line of the {label_path} has been corrupted.')\n                continue\n\n            category_id, vertex_info = label_info[0], label_info[1:]\n            segmentation, bbox, area = get_box_info(vertex_info, height, width)\n            annotation.append({\n                'segmentation': segmentation,\n                'area': area,\n                'iscrowd': 0,\n                'image_id': img_id,\n                'bbox': bbox,\n                'category_id': int(category_id)+1,\n                'id': self.annotation_id,\n            })\n            self.annotation_id += 1\n        return annotation\n\n    @staticmethod\n    def read_txt(txt_path):\n        with open(str(txt_path), 'r', encoding='utf-8') as f:\n            data = list(map(lambda x: x.rstrip('\\n'), f))\n        return data\n\n    @staticmethod\n    def mkdir(dir_path):\n        Path(dir_path).mkdir(parents=True, exist_ok=True)\n\n    @staticmethod\n    def verify_exists(file_path, raise_if_ne=True):\n        file_path = Path(file_path)\n        if not file_path.exists():\n            if raise_if_ne:\n                raise FileNotFoundError(f'The {file_path} is not exists!!!')\n            else:\n                return False\n        else:\n            return True\n\n    @staticmethod\n    def write_json(json_path, content: dict):\n        with open(json_path, 'w', encoding='utf-8') as f:\n            json.dump(content, f, ensure_ascii=False)\n\n\nif __name__ == \"__main__\":\n    parser = argparse.ArgumentParser('Datasets converter from YOLOV5 to COCO')\n    parser.add_argument('--data_dir', type=str, default='datasets/YOLOV5',\n                        help='Dataset root path')\n    parser.add_argument('--mode_list', type=str, default='train,val',\n                        help='generate which mode')\n    args = parser.parse_args()\n\n    converter = YOLOV5ToCOCO(args.data_dir)\n    converter(mode_list=args.mode_list.split(','))\n\n"
+        }
+      ],
+      "id": "aM9qIpVf",
+      "createdAt": 1724574636984,
+      "updatedAt": 1724574654722
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "make_index_4_yolov5",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# -*- encoding: utf-8 -*-\n# @File: makeIndex4yolov5ds.py\n# @Author: lijunjie2232\n# @Contact: git@lijunjie2232\n\nimport random\nimport os\nfrom tqdm import tqdm\nimport argparse\nimport yaml\nfrom pathlib import Path\n\ndef makeIndex(yaml_file=Path('./data.yaml'), out_path=None, ds_type='inner', ds_split='train,val,test'):\n    with open(yaml_file, 'r', encoding='utf-8') as f:\n        yaml_data = yaml.safe_load(f)\n    data_path = Path(yaml_data['path'])\n    train = yaml_data['train']\n    val = yaml_data['val']\n    train_img = []\n    val_img = []\n    if not isinstance(train, list):\n        train = [train]\n    if not isinstance(val, list):\n        val = [val]\n    for d in train:\n        train_img.extend(dataWalker(d, root=data_path))\n    for d in val:\n        val_img.extend(dataWalker(d, root=data_path))\n    saveIndex(train_img, Path(out_path)/\"train.txt\" if out_path else Path(yaml_file).parent/\"train.txt\")\n    saveIndex(val_img, Path(out_path)/\"val.txt\" if out_path else Path(yaml_file).parent/\"val.txt\")\n\n\ndef dataWalker(img_dir, anno_dir=None, root=Path('.')):\n    if not anno_dir:\n        anno_dir = str(img_dir).replace('images', 'labels')\n    img_list = []\n    for file in tqdm(os.listdir(root/img_dir), desc='walking ...', leave=False):\n        if os.path.isfile(os.path.join(root/anno_dir, os.path.splitext(file)[0]+'.txt')):\n            # img_list.append(os.path.abspath(os.path.join(img_dir, file)))\n            img_list.append(Path(os.path.join(img_dir, file)).__str__())\n    return img_list\n\ndef saveIndex(index_list, path):\n    with open(path, 'w') as f:\n        for line in tqdm(index_list, desc='save to '+str(path), leave=False):\n            f.write(line+'\\n')\n\nif __name__ == '__main__':\n    parser = argparse.ArgumentParser('Datasets converter from YOLOV5 to COCO')\n    parser.add_argument('--data_dir', type=str, default='./',\n                        help='Dataset root path')\n    parser.add_argument('--out_dir', type=str, default='',\n                        help='Dataset split result output path')\n    parser.add_argument('--type', type=str, default='inner',\n                        help='Dataset construction type, inner:type dir in images/labels dir; outer:...')\n    parser.add_argument('--data_split', type=str, default='train,val',\n                        help='Dataset split')\n    args = parser.parse_args()\n\n    ROOT = Path('.')\n\n    makeIndex(ROOT/args.data_dir, args.out_dir, ds_type=args.type, ds_split=args.data_split)\n\n"
+        }
+      ],
+      "id": "zXh0Znfi",
+      "createdAt": 1724574687043,
+      "updatedAt": 1724574709788
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "param & flops",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import torch\nimport torchvision\nfrom thop import profile\n\n# Model\nprint('==> Building model..')\nmodel = torchvision.models.alexnet(pretrained=False)\n\ndummy_input = torch.randn(1, 3, 224, 224)\nflops, params = profile(model, (dummy_input,))\nprint('flops: ', flops, 'params: ', params)\nprint('flops: %.2f M, params: %.2f M' % (flops / 1000000.0, params / 1000000.0))"
+        },
+        {
+          "label": "子片段 2",
+          "language": "python",
+          "value": "freeze_param = 0\ntrain_param = 0\nfor i in model.parameters():\n    if i.requires_grad:\n        train_param += i.numel()\n    else:\n        freeze_param += i.numel()\nfor name, i in model.named_parameters():\n    if i.requires_grad:\n        train_param += i.numel()\n    else:\n        freeze_param += i.numel()\nprint(\"trainable params: %.2f M\" % (train_param / 1000000.0))\nprint(\"freeze params: %.2f M\" % (freeze_param / 1000000.0))"
+        }
+      ],
+      "id": "AUEnTr0e",
+      "createdAt": 1724579916146,
+      "updatedAt": 1724776769307
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "time",
+      "content": [
+        {
+          "label": "basic",
+          "language": "python",
+          "value": "import time\n\nlocaltime = time.localtime(time.time())\nprint \"本地时间为 :\", localtime\n# 本地时间为 : time.struct_time(tm_year=2016, tm_mon=4, tm_mday=7, tm_hour=10, tm_min=3, tm_sec=27, tm_wday=3, tm_yday=98, tm_isdst=0)\n\nlocaltime = time.asctime( time.localtime(time.time()) )\nprint \"本地时间为 :\", localtime\n# 本地时间为 : Thu Apr  7 10:05:21 2016"
+        },
+        {
+          "label": "format",
+          "language": "python",
+          "value": "import time\n\n# 格式化成2016-03-20 11:45:39形式\nprint time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime())\n# 2016-04-07 10:25:09\n\n# 格式化成Sat Mar 28 22:24:24 2016形式\nprint time.strftime(\"%a %b %d %H:%M:%S %Y\", time.localtime())\n# Thu Apr 07 10:25:09 2016\n\n# 将格式字符串转换为时间戳\na = \"Sat Mar 28 22:24:24 2016\"\nprint time.mktime(time.strptime(a,\"%a %b %d %H:%M:%S %Y\"))\n# 1459175064.0\n\n\"\"\"\npython中时间日期格式化符号：\n\n%y 两位数的年份表示（00-99）\n%Y 四位数的年份表示（000-9999）\n%m 月份（01-12）\n%d 月内中的一天（0-31）\n%H 24小时制小时数（0-23）\n%I 12小时制小时数（01-12）\n%M 分钟数（00-59）\n%S 秒（00-59）\n%a 本地简化星期名称\n%A 本地完整星期名称\n%b 本地简化的月份名称\n%B 本地完整的月份名称\n%c 本地相应的日期表示和时间表示\n%j 年内的一天（001-366）\n%p 本地A.M.或P.M.的等价符\n%U 一年中的星期数（00-53）星期天为星期的开始\n%w 星期（0-6），星期天为星期的开始\n%W 一年中的星期数（00-53）星期一为星期的开始\n%x 本地相应的日期表示\n%X 本地相应的时间表示\n%Z 当前时区的名称\n%% %号本身\n\"\"\""
+        },
+        {
+          "label": "calender",
+          "language": "python",
+          "value": "#!/usr/bin/python\n# -*- coding: UTF-8 -*-\n \nimport calendar\n \ncal = calendar.month(2016, 1)\nprint \"以下输出2016年1月份的日历:\"\nprint cal"
+        }
+      ],
+      "id": "WHxAFSQd",
+      "createdAt": 1724660133793,
+      "updatedAt": 1724660309591
     }
   ],
   "tags": [
