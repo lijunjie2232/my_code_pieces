@@ -427,7 +427,7 @@
     {
       "isDeleted": false,
       "isFavorites": false,
-      "folderId": "weWtbZI4",
+      "folderId": "DvcfGvIx",
       "tagsIds": [],
       "description": null,
       "name": "torch",
@@ -445,7 +445,7 @@
       ],
       "id": "iUBzP4mv",
       "createdAt": 1706543184905,
-      "updatedAt": 1721703383484
+      "updatedAt": 1725934447395
     },
     {
       "isDeleted": false,
@@ -476,7 +476,7 @@
         {
           "label": "apply_async",
           "language": "plain_text",
-          "value": "#apply  (非阻塞，异步方式)\nfrom  multiprocessing import Pool\nimport time\n \n#apply_async   (阻塞，同步方式)\ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\ndef f2(arg):\n    print(arg)\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply_async(func=f1,args=(i,),callback=f2)\n    pool.close()\n    pool.join()\n"
+          "value": "#apply  (阻塞，同步方式)\nfrom  multiprocessing import Pool\nimport time\n \n#apply_async   (非阻塞，异步方式)\ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\ndef f2(arg):\n    print(arg)\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply_async(func=f1,args=(i,),callback=f2)\n    pool.close()\n    pool.join()\n"
         },
         {
           "label": "cpu_count",
@@ -496,7 +496,7 @@
         {
           "label": "apply",
           "language": "plain_text",
-          "value": "#apply  (非阻塞，异步方式)\nfrom  multiprocessing import Pool\nimport time\n \ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply(func=f1,args=(i,))"
+          "value": "#apply  (阻塞，同步方式)\nfrom  multiprocessing import Pool\nimport time\n \ndef f1(i):\n    time.sleep(0.5)\n    print(i)\n    return i + 100\n \nif __name__ == \"__main__\":\n    pool = Pool(5)\n    for i in range(1,31):\n        pool.apply(func=f1,args=(i,))"
         },
         {
           "label": "imap",
@@ -506,7 +506,7 @@
       ],
       "id": "CUsUEUiX",
       "createdAt": 1706577534588,
-      "updatedAt": 1720873914612
+      "updatedAt": 1724908222026
     },
     {
       "isDeleted": false,
@@ -1030,6 +1030,83 @@
       "id": "WHxAFSQd",
       "createdAt": 1724660133793,
       "updatedAt": 1724660309591
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "yolo_objectify",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import argparse\nfrom pathlib import Path\nfrom tqdm import tqdm\nimport os\nimport shutil\nimport logging as lg\nfrom multiprocessing.pool import ThreadPool\n\nLOG_FORMAT = \"%(asctime)s - %(levelname)s - %(message)s\"\nlg.basicConfig(level=lg.DEBUG, format=LOG_FORMAT)\n\n\ndef txt_objectify(path: Path):\n    if not path.suffix == \".txt\":\n        return\n    bak_file = path.parent / f\"{path.name}_bak.txt\"\n    if not bak_file.is_file():\n        shutil.copy(path, bak_file)\n    with open(bak_file, \"r\", encoding=\"utf-8\") as old_f:\n        anns = old_f.read().strip(\"\\n\").split(\"\\n\")\n        with open(path, \"w\", encoding=\"utf-8\") as new_f:\n            for ann in anns:\n                ann = ann.strip(\" \").split(\" \")\n                ann[0] = \"0\"\n                new_f.write(\" \".join(ann))\n                new_f.write(\"\\n\")\n\n\ndef dir_walker(dir: Path, filter, func, pool=None):\n    for file in os.listdir(dir):\n        file = dir / file\n        if file.is_dir():\n            dir_walker(file, filter, func)\n        elif filter(file):\n            if pool:\n                pool.apply_async(func=func,args=(file))\n            else:\n                func(file)\n\n\nif __name__ == \"__main__\":\n    parser = argparse.ArgumentParser(description=\"objectification yolo label directory\")\n    parser.add_argument(\"-d\", type=str, required=True)\n    args = parser.parse_args()\n\n    path = Path(args.d)\n\n    filter = lambda file: return file.suffix == \".txt\"\n    \n    pool = ThreadPool(16)\n    \n    dir_walker(path, filter, txt_objectify, pool=pool)\n    \n"
+        }
+      ],
+      "id": "FLBLihaP",
+      "createdAt": 1724908462822,
+      "updatedAt": 1724908475930
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "v3det(threadpool image check)",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# %%\nimport json\nimport os\nimport shutil\nfrom pathlib import Path\nfrom tqdm.notebook import tqdm\nfrom copy import deepcopy\nfrom PIL import Image\nfrom multiprocessing.pool import ThreadPool\nfrom itertools import repeat\n\n\n# %%\nDATA = Path(\"./data/\")\nANN_DIR = DATA / \"annotations\"\nOUT_DIR = Path(\"./yolo_format\")\n\n# %%\nwith open(ANN_DIR / \"v3det_2023_v1_train.json\", \"r\", encoding=\"utf-8\") as f:\n    train_json = json.load(f)\n\n\n# %%\ndef img_checker(args):\n    dir, img = args\n    img_file = img[\"file_name\"]\n    if str(img_file).endswith('jpg') or str(img_file).endswith('jpg'):\n        try:\n            Image.open(dir/img_file).load()\n        except:\n            if (dir/img_file).is_file():\n                os.unlik(dir/img_file)\n            img[\"file_name\"] = None\n        finally:\n            return img\n    return None\n\n# %%\nnew_images = []\nnew_id = dict({})\nimg_count = 1\nos.makedirs((OUT_DIR / \"images\" / \"train\"), exist_ok=True)\nwith ThreadPool(32) as pool:\n    results = pool.imap(func=img_checker,iterable= zip(repeat(DATA), train_json[\"images\"]))\n    for i in tqdm(results, total=len(train_json[\"images\"])):\n        if not i:\n            continue\n        if i[\"file_name\"]:\n            img_file = DATA / i[\"file_name\"]\n            new_img_path = OUT_DIR / f\"images/train/{str(img_count).rjust(10, '0')}{img_file.suffix}\"\n            shutil.copy(img_file, new_img_path)\n            this_img = deepcopy(i)\n            this_img[\"file_name\"] = new_img_path.name\n            new_id[this_img[\"id\"]] = img_count\n            this_img[\"id\"] = img_count\n            new_images.append(this_img)\n            img_count += 1\n\n\"\"\"for i in tqdm(train_json[\"images\"]):\n    img_file = DATA / i[\"file_name\"]\n    new_img_path = OUT_DIR / f\"images/train/{str(img_count).rjust(10, '0')}{img_file.suffix}\"\n    try:\n        Image.open(img_file).load()\n    except:\n        print(img_file)\n        os.unlik(img_file)\n        continue\n    if not new_img_path.is_file():\n        shutil.copy(img_file, new_img_path)\n    this_img = deepcopy(i)\n    this_img[\"file_name\"] = new_img_path.name\n    new_id[this_img[\"id\"]] = img_count\n    this_img[\"id\"] = img_count\n    new_images.append(this_img)\n    img_count += 1\"\"\"\n\nnew_annotations = []\nann_count = 0\nfor a in tqdm(train_json[\"annotations\"]):\n    if a[\"image_id\"] in new_id:\n        this_ann = deepcopy(a)\n        this_ann[\"image_id\"] = new_id[this_ann[\"image_id\"]]\n        this_ann[\"id\"] = ann_count\n        new_annotations.append(this_ann)\n        ann_count += 1\n\nnew_train_json = deepcopy(train_json)\nnew_train_json[\"images\"] = new_images\nnew_train_json[\"annotations\"] = new_annotations\n\nwith open(OUT_DIR / \"annotations\" / \"instances_train.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(new_train_json, f)\n\n# %%\ni\n\n# %%\na\n\n\n# %%\nthis_img\n\n\n# %%\nthis_ann\n\n\n# %%\nwith open(ANN_DIR / \"v3det_2023_v1_val.json\", \"r\", encoding=\"utf-8\") as f:\n    val_json = json.load(f)\n\n\n# %%\nnew_images = []\nnew_id = dict({})\nimg_count = 1\nos.makedirs((OUT_DIR / \"images\" / \"val\"), exist_ok=True)\nwith ThreadPool(32) as pool:\n    results = pool.imap(target=img_checker,iterable= zip(repeat(DATA), val_json[\"images\"]))\n    for i in tqdm(results, total=len(val_json[\"images\"])):\n        if not i:\n            continue\n        if i[\"file_name\"]:\n            img_file = DATA / i[\"file_name\"]\n            new_img_path = OUT_DIR / f\"images/val/{str(img_count).rjust(10, '0')}{img_file.suffix}\"\n            shutil.copy(img_file, new_img_path)\n            this_img = deepcopy(i)\n            this_img[\"file_name\"] = new_img_path.name\n            new_id[this_img[\"id\"]] = img_count\n            this_img[\"id\"] = img_count\n            new_images.append(this_img)\n            img_count += 1\n\n\"\"\"for i in tqdm(val_json[\"images\"]):\n    img_file = DATA / i[\"file_name\"]\n    new_img_path = OUT_DIR / f\"images/val/{str(img_count).rjust(10, '0')}{img_file.suffix}\"\n    try:\n        image.open(img_file).load()\n    except:\n        print(img_file)\n        os.unlik(img_file)\n        continue\n    if not new_img_path.is_file():\n        shutil.copy(img_file, new_img_path)\n    this_img = deepcopy(i)\n    this_img[\"file_name\"] = new_img_path.name\n    new_id[this_img[\"id\"]] = img_count\n    this_img[\"id\"] = img_count\n    new_images.append(this_img)\n    img_count += 1\"\"\"\n\nnew_annotations = []\nann_count = 0\nfor a in tqdm(val_json[\"annotations\"]):\n    if a[\"image_id\"] in new_id:\n        this_ann = deepcopy(a)\n        this_ann[\"image_id\"] = new_id[this_ann[\"image_id\"]]\n        this_ann[\"id\"] = ann_count\n        new_annotations.append(this_ann)\n        ann_count += 1\n\nnew_val_json = deepcopy(val_json)\nnew_val_json[\"images\"] = new_images\nnew_val_json[\"annotations\"] = new_annotations\n\nwith open(OUT_DIR / \"annotations\" / \"instances_val.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(new_val_json, f)\n\n\n\n\n"
+        }
+      ],
+      "id": "iXUs53Ff",
+      "createdAt": 1724919224198,
+      "updatedAt": 1724919274735
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "image checker",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "# %%\nimport json\nimport os\nimport shutil\nfrom pathlib import Path\nfrom tqdm import tqdm\nfrom copy import deepcopy\nfrom PIL import Image\nfrom multiprocessing.pool import ThreadPool\nfrom itertools import repeat\n\n\n# %%\nDATA = Path(\"./data/\")\nANN_DIR = DATA / \"annotations\"\nOUT_DIR = Path(\"./yolo_format\")\n\n# %%\nwith open(ANN_DIR / \"v3det_2023_v1_train.json\", \"r\", encoding=\"utf-8\") as f:\n    train_json = json.load(f)\n\n\n# %%\ndef img_checker(args):\n    dir, img = args\n    img_file = img[\"file_name\"]\n    if str(img_file).endswith('jpg') or str(img_file).endswith('jpg'):\n        try:\n            Image.open(dir / img_file).verify()\n            img = Image.open(dir / img_file)\n            img.load()\n        except:\n            if (dir/img_file).is_file():\n                os.unlik(dir/img_file)\n            img[\"file_name\"] = None\n        finally:\n            return img\n    return None\n\n# %%\nnew_images = []\nnew_id = dict({})\nimg_count = 1\nos.makedirs((OUT_DIR / \"images\" / \"train\"), exist_ok=True)\nwith ThreadPool(32) as pool:\n    results = pool.imap(func=img_checker,iterable= zip(repeat(DATA), train_json[\"images\"]))\n    for i in tqdm(results, total=len(train_json[\"images\"])):\n        if not i:\n            continue\n        if i[\"file_name\"]:\n            img_file = DATA / i[\"file_name\"]\n            new_img_path = OUT_DIR / f\"images/train/{str(img_count).rjust(10, '0')}{img_file.suffix}\"\n            shutil.copy(img_file, new_img_path)\n            this_img = deepcopy(i)\n            this_img[\"file_name\"] = new_img_path.name\n            new_id[this_img[\"id\"]] = img_count\n            this_img[\"id\"] = img_count\n            new_images.append(this_img)\n            img_count += 1\n"
+        }
+      ],
+      "id": "OaCbxc8o",
+      "createdAt": 1725756511234,
+      "updatedAt": 1725770181958
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "pytorch ddp",
+      "content": [
+        {
+          "label": "train",
+          "language": "python",
+          "value": "导入\ntorch.multiprocessing 是围绕 Python 原生多处理的 PyTorch 包装器\n\n分布式进程组包含所有可以相互通信和同步的进程。\n\nimport torch\nimport torch.nn.functional as F\nfrom utils import MyTrainDataset\n\n+ import torch.multiprocessing as mp\n+ from torch.utils.data.distributed import DistributedSampler\n+ from torch.nn.parallel import DistributedDataParallel as DDP\n+ from torch.distributed import init_process_group, destroy_process_group\n+ import os\n构建进程组\n首先，在初始化组进程之前，调用 set_device，它为每个进程设置默认 GPU。这对于防止 GPU:0 上的挂起或过度内存使用至关重要。\n\n进程组可以通过 TCP（默认）或从共享文件系统初始化。阅读有关 进程组初始化 的更多信息\n\ninit_process_group 初始化分布式进程组。\n\n了解有关 选择 DDP 后端 的更多信息\n\n+ def ddp_setup(rank: int, world_size: int):\n+   \"\"\"\n+   Args:\n+       rank: Unique identifier of each process\n+      world_size: Total number of processes\n+   \"\"\"\n+   os.environ[\"MASTER_ADDR\"] = \"localhost\"\n+   os.environ[\"MASTER_PORT\"] = \"12355\"\n+   torch.cuda.set_device(rank)\n+   init_process_group(backend=\"nccl\", rank=rank, world_size=world_size)\n构建 DDP 模型\n- self.model = model.to(gpu_id)\n+ self.model = DDP(model, device_ids=[gpu_id])\n分发输入数据\nDistributedSampler 将输入数据跨所有分布式进程进行分块。\n\n每个进程将接收一个包含 32 个样本的输入批次；有效批次大小为 32 * nprocs，使用 4 个 GPU 时为 128。\n\ntrain_data = torch.utils.data.DataLoader(\n    dataset=train_dataset,\n    batch_size=32,\n-   shuffle=True,\n+   shuffle=False,\n+   sampler=DistributedSampler(train_dataset),\n)\n在每个 epoch 开始时调用 DistributedSampler 上的 set_epoch() 方法对于使跨多个 epoch 的混洗正常工作是必要的。否则，将在每个 epoch 中使用相同的排序。\n\ndef _run_epoch(self, epoch):\n    b_sz = len(next(iter(self.train_data))[0])\n+   self.train_data.sampler.set_epoch(epoch)\n    for source, targets in self.train_data:\n      ...\n      self._run_batch(source, targets)\n保存模型检查点\n我们只需要从一个进程保存模型检查点。如果没有这个条件，每个进程都会保存其相同模式的副本。阅读有关使用 DDP 保存和加载模型的更多信息 此处\n\n- ckp = self.model.state_dict()\n+ ckp = self.model.module.state_dict()\n...\n...\n- if epoch % self.save_every == 0:\n+ if self.gpu_id == 0 and epoch % self.save_every == 0:\n  self._save_checkpoint(epoch)\n警告\n\n集体调用 是在所有分布式进程上运行的函数，它们用于将某些状态或值收集到特定进程。集体调用要求所有等级都运行集体代码。在这个例子中，_save_checkpoint 不应该有任何集体调用，因为它只在 rank:0 进程上运行。如果您需要进行任何集体调用，则应在 if self.gpu_id == 0 检查之前进行。\n\n运行分布式训练作业\n包括新的参数 rank（替换 device）和 world_size。\n\nrank 是在调用 mp.spawn 时由 DDP 自动分配的。\n\nworld_size 是整个训练作业中的进程数量。对于 GPU 训练，这对应于使用的 GPU 数量，并且每个进程都在专用 GPU 上工作。\n\n- def main(device, total_epochs, save_every):\n+ def main(rank, world_size, total_epochs, save_every):\n+  ddp_setup(rank, world_size)\n   dataset, model, optimizer = load_train_objs()\n   train_data = prepare_dataloader(dataset, batch_size=32)\n-  trainer = Trainer(model, train_data, optimizer, device, save_every)\n+  trainer = Trainer(model, train_data, optimizer, rank, save_every)\n   trainer.train(total_epochs)\n+  destroy_process_group()\n\nif __name__ == \"__main__\":\n   import sys\n   total_epochs = int(sys.argv[1])\n   save_every = int(sys.argv[2])\n-  device = 0      # shorthand for cuda:0\n-  main(device, total_epochs, save_every)\n+  world_size = torch.cuda.device_count()\n+  mp.spawn(main, args=(world_size, total_epochs, save_every,), nprocs=world_size)"
+        },
+        {
+          "label": "inference",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "PfEmpLuD",
+      "createdAt": 1725932493707,
+      "updatedAt": 1725934273941
     }
   ],
   "tags": [
