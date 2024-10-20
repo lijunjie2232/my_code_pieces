@@ -519,12 +519,12 @@
         {
           "label": "子片段 1",
           "language": "plain_text",
-          "value": "from concurrent.futures import ProcessPoolExecutor\nimport time, random, os\n\ndef piao(name, n):\n    print('%s is piaoing %s' % (name, os.getpid()))\n    time.sleep(1)\n    return n ** 2\n\n\nif __name__ == '__main__':\n    p = ProcessPoolExecutor(2)\n    objs = []\n    start = time.time()\n    for i in range(5):\n        obj = p.submit(piao, 'safly %s' % i, i)  # 异步调用\n        objs.append(obj)\n\n    p.shutdown(wait=True)\n    print('主', os.getpid())\n    for obj in objs:\n        print(obj.result())\n\n    stop = time.time()\n    print(stop - start)"
+          "value": "from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed, wait, ALL_COMPLETED\nimport time, random, os\n\ndef piao(name, n):\n    print('%s is piaoing %s' % (name, os.getpid()))\n    time.sleep(1)\n    return n ** 2\n\n\nif __name__ == '__main__':\n\t\t########################################\n    p = ProcessPoolExecutor(2)\n    objs = []\n    start = time.time()\n    for i in range(5):\n        obj = p.submit(piao, 'safly %s' % i, i)  # 异步调用\n        objs.append(obj)\n\n    p.shutdown(wait=True)\n    print('主', os.getpid())\n    for obj in objs:\n        print(obj.done())\n        print(obj.result(timeout=None))\n\n    stop = time.time()\n    print(stop - start)\n\t\t########################################\n    p = ThreadPoolExecutor(2)\n    objs = []\n    start = time.time()\n    for i in range(5):\n        obj = p.submit(piao, '%s' % i, i)  # 异步调用\n        objs.append(obj)\n\n    print('主', os.getpid())\n    for obj in as_completed(objs):\n        print(obj.result())\n\t\t########################################\n    p = ThreadPoolExecutor(2)\n    objs = []\n    start = time.time()\n    for i in range(5):\n        obj = p.submit(piao, '%s' % i, i)  # 异步调用\n        objs.append(obj)\n\n    print('主', os.getpid())\n    wait(objs, return_when=ALL_COMPLETED)\n    for obj in objs:\n        print(obj.done())\n        print(obj.result(timeout=None))\n\n    stop = time.time()\n    print(stop - start)\n    p.shutdown(wait=True)"
         }
       ],
       "id": "v00hMsQs",
       "createdAt": 1706578242881,
-      "updatedAt": 1706578249530
+      "updatedAt": 1727002786295
     },
     {
       "isDeleted": true,
@@ -1101,12 +1101,235 @@
         {
           "label": "inference",
           "language": "python",
-          "value": ""
+          "value": "import torch\nimport torch.distributed as dist\nimport json\nfrom pycocotools.coco import COCO\nfrom pycocotools.cocoeval import COCOeval\n\n# 模拟推理结果\ndef inference_on_gpu(model, data_loader, device):\n    model.eval()\n    all_predictions = []\n    with torch.no_grad():\n        for images, image_ids in data_loader:\n            images = images.to(device)\n            outputs = model(images)  # 假设模型输出包含预测框和类别\n\n            # 将输出转换为 COCO 格式的预测结果\n            for i, output in enumerate(outputs):\n                pred_boxes = output['boxes'].cpu().numpy()\n                pred_scores = output['scores'].cpu().numpy()\n                pred_labels = output['labels'].cpu().numpy()\n\n                # 每张图片的预测框\n                for box, score, label in zip(pred_boxes, pred_scores, pred_labels):\n                    all_predictions.append({\n                        \"image_id\": image_ids[i].item(),\n                        \"category_id\": label.item(),\n                        \"bbox\": box.tolist(),  # COCO 格式的 [x_min, y_min, width, height]\n                        \"score\": score.item()\n                    })\n    return all_predictions\n\n# 收集所有 GPU 上的推理结果\ndef gather_predictions(predictions):\n    # 如果是分布式训练，需要收集每个 GPU 的结果\n    all_predictions = [None for _ in range(dist.get_world_size())]\n    dist.all_gather_object(all_predictions, predictions)  # 收集每个 GPU 的预测结果\n    # 展平收集到的预测结果\n    all_predictions = [item for sublist in all_predictions for item in sublist]\n    return all_predictions\n\n# 计算 COCO mAP\ndef evaluate_predictions(coco_gt, all_predictions, output_file='predictions.json'):\n    with open(output_file, 'w') as f:\n        json.dump(all_predictions, f)\n\n    coco_dt = coco_gt.loadRes(output_file)\n    coco_eval = COCOeval(coco_gt, coco_dt, 'bbox')\n    coco_eval.evaluate()\n    coco_eval.accumulate()\n    coco_eval.summarize()\n\n# 主推理与评估流程\ndef main():\n    # 初始化分布式环境\n    dist.init_process_group(backend='nccl')\n\n    # 设置设备\n    device = torch.device(f'cuda:{dist.get_rank()}')\n\n    # 加载模型和数据\n    model = YourModel().to(device)\n    data_loader = YourDataLoader()  # 假设 data_loader 返回 (images, image_ids)\n    \n    # COCO ground truth 数据\n    coco_gt = COCO(annotation_file='instances_val2017.json')\n\n    # 每个 GPU 执行推理\n    predictions = inference_on_gpu(model, data_loader, device)\n\n    # 收集所有 GPU 的推理结果\n    all_predictions = gather_predictions(predictions)\n\n    # 只有 rank 0 的进程负责计算 mAP\n    if dist.get_rank() == 0:\n        evaluate_predictions(coco_gt, all_predictions)\n\n    # 结束分布式进程组\n    dist.barrier()\n    dist.destroy_process_group()\n\nif __name__ == \"__main__\":\n    main()\n"
         }
       ],
       "id": "PfEmpLuD",
       "createdAt": 1725932493707,
-      "updatedAt": 1725934273941
+      "updatedAt": 1726814950100
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "memory_profiler",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import numpy as np\nfrom memory_profiler import profile\n \n@profile\ndef demo():\n    a = np.random.rand(10000000)\n    b = np.random.rand(10000000)\n    \n    a_ = a[a < b]\n    b_ = b[a < b]\n    \n    del a, b\n \n    return a_, b_\n \n \nif __name__ == '__main__':\n    demo()"
+        }
+      ],
+      "id": "1mZKVtdM",
+      "createdAt": 1726649105037,
+      "updatedAt": 1726649118980
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "@timecalc",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "def timecalc(func):\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        end = time.time()\n        print(f\"[function]: {func.__name__}, [time]: {end - start}ms\")\n        return result\n    return wrapper"
+        }
+      ],
+      "id": "JWFfVT6n",
+      "createdAt": 1726819216801,
+      "updatedAt": 1726819221854
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "Queue",
+      "content": [
+        {
+          "label": "get&put",
+          "language": "plain_text",
+          "value": "\"\"\"\nPython 中的消息队列\nPython 提供了 queue 模块来实现线程之间的消息队列。queue.Queue 是线程安全的，允许多个线程安全地访问和修改队列中的数据。\n\nqueue.Queue 的基本用法\nqueue.Queue 通过两个主要方法实现线程安全的队列操作：\n\nput(item)：将数据项放入队列。\nget()：从队列中取出数据项。如果队列为空，它会阻塞直到有数据可取。\n\"\"\"\n\nimport threading\nimport queue\nimport time\n\n# 创建队列对象\nq = queue.Queue()\n\n# 生产者线程\ndef producer():\n    for i in range(5):\n        item = f\"item_{i}\"\n        print(f\"Producing {item}\")\n        q.put(item)\n        time.sleep(1)\n\n# 消费者线程\ndef consumer():\n    while True:\n        item = q.get()\n        if item is None:\n            break\n        print(f\"Consuming {item}\")\n        q.task_done()\n\n# 创建线程\nproducer_thread = threading.Thread(target=producer)\nconsumer_thread = threading.Thread(target=consumer)\n\n# 启动线程\nproducer_thread.start()\nconsumer_thread.start()\n\n# 等待生产者结束\nproducer_thread.join()\n\n# 向队列发送终止信号\nq.put(None)\n\n# 等待消费者结束\nconsumer_thread.join()\n\nprint(\"All tasks finished\")\n\"\"\"\n分析：\n生产者线程：负责将数据项放入队列。这里每隔 1 秒向队列中添加一个数据项。\n消费者线程：负责从队列中取出数据并处理。如果队列为空，q.get() 会阻塞，直到有新数据项进入队列。当所有生产任务完成后，通过向队列中添加 None 来通知消费者线程结束。\n线程通信：queue.Queue 在多个线程之间安全地传递数据，避免了手动加锁的复杂性。\n\"\"\""
+        },
+        {
+          "label": "Full&Empty",
+          "language": "python",
+          "value": "\"\"\"\n阻塞与非阻塞队列\n队列的 put() 和 get() 方法默认是阻塞的，但你可以通过设置 block=False 来让它们变为非阻塞模式。如果在非阻塞模式下调用 get() 时队列为空，或者 put() 时队列满了，它们会抛出 queue.Empty 或 queue.Full 异常。\n\n非阻塞队列示例：\n\"\"\"\n\nimport queue\n\nq = queue.Queue(maxsize=3)\n\n# 非阻塞地放入队列\ntry:\n    q.put(\"item\", block=False)\nexcept queue.Full:\n    print(\"Queue is full!\")\n\n# 非阻塞地获取队列\ntry:\n    item = q.get(block=False)\nexcept queue.Empty:\n    print(\"Queue is empty!\")"
+        },
+        {
+          "label": "join&task_done",
+          "language": "python",
+          "value": "\"\"\"\nqueue.Queue 的其他方法\nq.task_done()：当消费者线程完成对某个任务的处理时，调用此方法通知队列该任务已完成。\nq.join()：阻塞主线程，直到队列中的所有任务都已完成。它会等待所有任务都调用 task_done()。\n\"\"\"\nimport threading\nimport queue\n\nq = queue.Queue()\n\ndef producer():\n    for i in range(5):\n        q.put(i)\n        print(f\"Produced {i}\")\n\ndef consumer():\n    while True:\n        item = q.get()\n        print(f\"Consumed {item}\")\n        q.task_done()\n\n# 启动生产者和消费者线程\nthreading.Thread(target=producer).start()\nthreading.Thread(target=consumer, daemon=True).start()\n\n# 等待所有任务完成\nq.join()\nprint(\"All tasks are done\")"
+        },
+        {
+          "label": "子片段 4",
+          "language": "python",
+          "value": "\"\"\"\nPython queue 模块还提供了其他几种类型的队列：\n\nqueue.LifoQueue：后进先出（LIFO）的队列，类似于栈。\nqueue.PriorityQueue：优先级队列，数据项会按照优先级顺序排列。\n优先级队列示例：\n\"\"\"\nimport queue\n\npq = queue.PriorityQueue()\n\n# 将数据按照优先级放入队列\npq.put((2, \"Medium priority\"))\npq.put((1, \"High priority\"))\npq.put((3, \"Low priority\"))\n\n# 按照优先级顺序获取数据\nwhile not pq.empty():\n    priority, task = pq.get()\n    print(f\"Processing task with priority {priority}: {task}\")"
+        },
+        {
+          "label": "子片段 5",
+          "language": "python",
+          "value": ""
+        },
+        {
+          "label": "子片段 6",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "YcCA6Xx6",
+      "createdAt": 1726991761016,
+      "updatedAt": 1726993316352
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "re replace",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "re.sub(\"<.*?>\", \"\", word)"
+        }
+      ],
+      "id": "zW1UeYgh",
+      "createdAt": 1727353216088,
+      "updatedAt": 1727425970531
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "cuda time",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "torch.cuda.synchronize()\nstart = time()\nmodel(x)\ntorch.cuda.synchronize()\nend = time()\nprint(end - start, \"ms\")"
+        }
+      ],
+      "id": "HVTNDdUU",
+      "createdAt": 1727425732121,
+      "updatedAt": 1727425739504
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "cude mem",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "import torch\nfrom torchvision import models\nfrom memory_profiler import profile\nfrom inspect import unwrap\nfrom time import time\n\n\n@profile\ndef model_test():\n    device = torch.device(\"cuda:0\")\n    model = models.resnet50().cuda()\n    print(torch.cuda.memory_allocated() / 1024**2, \"MB\")\n    model = model.cpu()\n    print(torch.cuda.max_memory_allocated() / 1024**2, \"MB\")\n    print(torch.cuda.memory_summary())\n    model = model.cuda()\n\n    with torch.profiler.profile(\n        activities=[\n            torch.profiler.ProfilerActivity.CPU,\n            torch.profiler.ProfilerActivity.CUDA,\n        ],\n        # execution_trace_observer=(\n        #     torch.profiler.ExecutionTraceObserver().register_callback(\"./execution_trace.json\")\n        # ),\n        record_shapes=True,\n        profile_memory=True,  # 启用显存分析\n        with_stack=True,\n    ) as prof:\n        x = torch.randn(1, 3, 224, 224).cuda()\n        model(x)\n    print(prof.key_averages().table(sort_by=\"cuda_time_total\"))\n\n    x = torch.randn(32, 3, 224, 224).cuda()\n    torch.cuda.synchronize()\n    start = time()\n    model(x)\n    torch.cuda.synchronize()\n    end = time()\n    print(end - start, \"ms\")\n\n\nif __name__ == \"__main__\":\n    model_test()\n    unwrap(model_test)()\n"
+        }
+      ],
+      "id": "7aNFOFbC",
+      "createdAt": 1727425948490,
+      "updatedAt": 1727425960495
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "pytorch cudnn enable",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import torch\ntorch.backends.cudnn.enabled = True\ntorch.backend.cudnn.benchmark=True"
+        }
+      ],
+      "id": "9doO_wAe",
+      "createdAt": 1727507206242,
+      "updatedAt": 1727507218048
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "whisper inference with ddp",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import whisper\nfrom whisper.transcribe import *\n\nimport torch\nfrom torch.utils.data import Dataset, DataLoader\nfrom torch.utils.data.distributed import DistributedSampler\nfrom torch.distributed import init_process_group, barrier\nimport os\nfrom pathlib import Path\nfrom tqdm import tqdm\n\nimport argparse\n\nos.environ[\"MKL_NUM_THREADS\"] = \"1024\"\nos.environ[\"OMP_NUM_THREADS\"] = \"1024\"\ntorch.set_num_threads(1024)\n\ntorch.backends.cudnn.enabled = True\ntorch.backends.cudnn.benchmark = True\n\nLOCAL_RANK = int(\n    os.getenv(\"LOCAL_RANK\", 0)\n)  # https://pytorch.org/docs/stable/elastic/run.html\nRANK = int(os.getenv(\"RANK\", 0))\nWORLD_SIZE = int(os.getenv(\"WORLD_SIZE\", 1))\n\n\nclass input_files(Dataset):\n    def __init__(self, path, valid_suffix=[\".acc\", \".mp3\", \".wav\"]):\n        self.path = path\n        self.files = (self.path / file for file in os.listdir(path))\n        self.files = [\n            f.__str__() for f in filter(lambda f: f.suffix in valid_suffix, self.files)\n        ]\n\n    def __getitem__(self, index):\n        return self.files[index]\n\n    def __len__(self):\n        return len(self.files)\n\n\ndef ddp_setup(rank: int, world_size: int):\n    \"\"\"\n    Args:\n        rank: Unique identifier of each process\n    world_size: Total number of processes\n    \"\"\"\n    torch.cuda.set_device(rank)\n    init_process_group(backend=\"nccl\", rank=rank, world_size=world_size)\n\n\ndef get_args():\n    # fmt: off\n    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)\n    # parser.add_argument(\"audio\", nargs=\"+\", type=str, help=\"audio file(s) to transcribe\")\n    parser.add_argument(\"--model\", default=\"small\", type=str, help=\"name of the Whisper model to use\")\n    parser.add_argument(\"--model_dir\", type=str, default=None, help=\"the path to save model files; uses ~/.cache/whisper by default\")\n    parser.add_argument(\"--device\", default=\"cuda\" if torch.cuda.is_available() else \"cpu\", help=\"device to use for PyTorch inference\")\n    parser.add_argument(\"--output_dir\", \"-o\", type=str, default=\"./output\", help=\"directory to save the outputs\")\n    parser.add_argument(\"--output_format\", \"-f\", type=str, default=\"all\", choices=[\"txt\", \"vtt\", \"srt\", \"tsv\", \"json\", \"all\"], help=\"format of the output file; if not specified, all available formats will be produced\")\n    parser.add_argument(\"--verbose\", type=str2bool, default=True, help=\"whether to print out the progress and debug messages\")\n\n    parser.add_argument(\"--task\", type=str, default=\"transcribe\", choices=[\"transcribe\", \"translate\"], help=\"whether to perform X->X speech recognition ('transcribe') or X->English translation ('translate')\")\n    parser.add_argument(\"--language\", type=str, default=None, choices=sorted(LANGUAGES.keys()) + sorted([k.title() for k in TO_LANGUAGE_CODE.keys()]), help=\"language spoken in the audio, specify None to perform language detection\")\n\n    parser.add_argument(\"--temperature\", type=float, default=0, help=\"temperature to use for sampling\")\n    parser.add_argument(\"--best_of\", type=optional_int, default=5, help=\"number of candidates when sampling with non-zero temperature\")\n    parser.add_argument(\"--beam_size\", type=optional_int, default=5, help=\"number of beams in beam search, only applicable when temperature is zero\")\n    parser.add_argument(\"--patience\", type=float, default=None, help=\"optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the default (1.0) is equivalent to conventional beam search\")\n    parser.add_argument(\"--length_penalty\", type=float, default=None, help=\"optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses simple length normalization by default\")\n\n    parser.add_argument(\"--suppress_tokens\", type=str, default=\"-1\", help=\"comma-separated list of token ids to suppress during sampling; '-1' will suppress most special characters except common punctuations\")\n    parser.add_argument(\"--initial_prompt\", type=str, default=None, help=\"optional text to provide as a prompt for the first window.\")\n    parser.add_argument(\"--condition_on_previous_text\", type=str2bool, default=True, help=\"if True, provide the previous output of the model as a prompt for the next window; disabling may make the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure loop\")\n    parser.add_argument(\"--fp16\", type=str2bool, default=True, help=\"whether to perform inference in fp16; True by default\")\n\n    parser.add_argument(\"--temperature_increment_on_fallback\", type=optional_float, default=0.2, help=\"temperature to increase when falling back when the decoding fails to meet either of the thresholds below\")\n    parser.add_argument(\"--compression_ratio_threshold\", type=optional_float, default=2.4, help=\"if the gzip compression ratio is higher than this value, treat the decoding as failed\")\n    parser.add_argument(\"--logprob_threshold\", type=optional_float, default=-1.0, help=\"if the average log probability is lower than this value, treat the decoding as failed\")\n    parser.add_argument(\"--no_speech_threshold\", type=optional_float, default=0.6, help=\"if the probability of the <|nospeech|> token is higher than this value AND the decoding has failed due to `logprob_threshold`, consider the segment as silence\")\n    parser.add_argument(\"--word_timestamps\", type=str2bool, default=False, help=\"(experimental) extract word-level timestamps and refine the results based on them\")\n    parser.add_argument(\"--prepend_punctuations\", type=str, default=\"\\\"\\'“¿([{-\", help=\"if word_timestamps is True, merge these punctuation symbols with the next word\")\n    parser.add_argument(\"--append_punctuations\", type=str, default=\"\\\"\\'.。,，!！?？:：”)]}、\", help=\"if word_timestamps is True, merge these punctuation symbols with the previous word\")\n    parser.add_argument(\"--highlight_words\", type=str2bool, default=False, help=\"(requires --word_timestamps True) underline each word as it is spoken in srt and vtt\")\n    parser.add_argument(\"--max_line_width\", type=optional_int, default=None, help=\"(requires --word_timestamps True) the maximum number of characters in a line before breaking the line\")\n    parser.add_argument(\"--max_line_count\", type=optional_int, default=None, help=\"(requires --word_timestamps True) the maximum number of lines in a segment\")\n    parser.add_argument(\"--max_words_per_line\", type=optional_int, default=None, help=\"(requires --word_timestamps True, no effect with --max_line_width) the maximum number of words in a segment\")\n    parser.add_argument(\"--threads\", type=optional_int, default=0, help=\"number of threads used by torch for CPU inference; supercedes MKL_NUM_THREADS/OMP_NUM_THREADS\")\n    parser.add_argument(\"--clip_timestamps\", type=str, default=\"0\", help=\"comma-separated list start,end,start,end,... timestamps (in seconds) of clips to process, where the last end timestamp defaults to the end of the file\")\n    parser.add_argument(\"--hallucination_silence_threshold\", type=optional_float, help=\"(requires --word_timestamps True) skip silent periods longer than this threshold (in seconds) when a possible hallucination is detected\")\n\n    return parser.parse_args().__dict__\n\n\nif __name__ == \"__main__\":\n    ddp_setup(RANK, WORLD_SIZE)\n    input_dir = Path(\"input\")\n    output_dir = Path(\"output\")\n    output_dir.mkdir(exist_ok=True)\n\n    args = get_args()\n    model_name = \"large-v3\"\n    model_dir = args[\"model_dir\"]\n    output_format = \"all\"\n    device = \"cuda\"\n    args[\"language\"] = \"Japanese\"\n\n    args.pop(\"model\")\n    args.pop(\"model_dir\")\n    args.pop(\"output_dir\")\n    args.pop(\"output_format\")\n    args.pop(\"device\")\n    args.pop(\"threads\")\n\n    model = whisper.load_model(\"large-v3\", device=\"cuda\", download_root=model_dir)\n    temperature = args.pop(\"temperature\")\n    if (increment := args.pop(\"temperature_increment_on_fallback\")) is not None:\n        temperature = tuple(np.arange(temperature, 1.0 + 1e-6, increment))\n    else:\n        temperature = [temperature]\n\n    writer = get_writer(output_format, output_dir)\n    word_options = [\n        \"highlight_words\",\n        \"max_line_count\",\n        \"max_line_width\",\n        \"max_words_per_line\",\n    ]\n    args[\"word_timestamps\"] = True\n    if not args[\"word_timestamps\"]:\n        for option in word_options:\n            assert args[option], Exception(\n                f\"--{option} requires --word_timestamps True\"\n            )\n    if args[\"max_line_count\"] and not args[\"max_line_width\"]:\n        warnings.warn(\"--max_line_count has no effect without --max_line_width\")\n    if args[\"max_words_per_line\"] and args[\"max_line_width\"]:\n        warnings.warn(\"--max_words_per_line has no effect with --max_line_width\")\n    writer_args = {arg: args.pop(arg) for arg in word_options}\n\n    dataset = input_files(input_dir)\n    loop = DataLoader(\n        dataset,\n        batch_size=1,\n        sampler=DistributedSampler(dataset, shuffle=False),\n    )\n    if not RANK:\n        loop = tqdm(loop)\n    for audio_path in loop:\n        assert len(audio_path) == 1\n        audio_path = audio_path[0]\n        result = transcribe(\n            model, audio_path.__str__(), temperature=temperature, **args\n        )\n        writer(result, audio_path, **writer_args)\n        # try:\n        #     result = transcribe(model, audio_path.__str__(), temperature=temperature, **args)\n        #     writer(result, audio_path, **writer_args)\n        # except Exception as e:\n        #     traceback.print_exc()\n        #     print(f\"Skipping {audio_path} due to {type(e).__name__}: {str(e)}\")\n    barrier()\n"
+        }
+      ],
+      "id": "v8waXzoJ",
+      "createdAt": 1727510394313,
+      "updatedAt": 1727511239340
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "mp3 extractor",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import subprocess\nfrom pathlib import Path\nimport os\nimport sys\nfrom multiprocessing.pool import Pool\n\n\ndef mp3_extractor(input, output):\n    subprocess.run(\n        [\n            \"ffmpeg.exe\",\n            \"-i\",\n            input,\n            \"-vn\",\n            \"-c:a\",\n            \"mp3\",\n            output,\n        ]\n    )\n\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).parent.parent\n    mp3_dir = ROOT / \"mp3\"\n    mp3_dir.mkdir(exist_ok=True)\n    with Pool(16) as pool:\n        for file in os.listdir(ROOT):\n            file = ROOT / file\n            if file.suffix != \".mp4\":\n                continue\n            input = file.absolute().__str__()\n            output = (mp3_dir / f\"{file.stem}.mp3\").absolute().__str__()\n            pool.apply_async(mp3_extractor, args=(input, output))\n        pool.close()\n        pool.join()\n"
+        }
+      ],
+      "id": "wthzwaeG",
+      "createdAt": 1727512632091,
+      "updatedAt": 1727512640972
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "未命名程式碼片段",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "YOzeI46J",
+      "createdAt": 1729164388322,
+      "updatedAt": 1729164388322
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "hamming",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "python",
+          "value": "import torch\n\ndef hamming_distance_batchwise(hamming_codes):\n    \"\"\"\n    计算 m 个二进制向量两两之间的海明距离\n    :param hamming_codes: 二进制向量张量，形状为 [m, embedding_size]\n    :return: 海明距离矩阵，形状为 [m, m]\n    \"\"\"\n    m = hamming_codes.size(0)\n    \n    # 扩展维度，使每个向量可以与其他所有向量进行比较\n    # 形状从 [m, embedding_size] 变成 [m, 1, embedding_size] 和 [1, m, embedding_size]\n    hamming_codes_1 = hamming_codes.unsqueeze(1)  # [m, 1, embedding_size]\n    hamming_codes_2 = hamming_codes.unsqueeze(0)  # [1, m, embedding_size]\n    \n    # 进行逐位异或操作，得到异或结果矩阵，形状为 [m, m, embedding_size]\n    xor_result = torch.bitwise_xor(hamming_codes_1, hamming_codes_2)\n    \n    # 统计异或结果中 1 的数量，即海明距离\n    # 最后结果是 [m, m] 的矩阵，其中每个元素是对应向量之间的海明距离\n    hamming_distances = torch.sum(xor_result, dim=-1)\n    \n    return hamming_distances\n\n# 测试\nhamming_codes = torch.tensor([[0, 0, 1, 1, 0, 1, 1], \n                              [1, 0, 0, 1, 1, 0, 1], \n                              [1, 1, 1, 0, 0, 0, 1]], dtype=torch.int64)\n\n# 计算两两之间的海明距离矩阵\nhamming_distances = hamming_distance_batchwise(hamming_codes)\nprint(\"Hamming distance matrix:\\n\", hamming_distances)\n"
+        }
+      ],
+      "id": "1V9l10Wh",
+      "createdAt": 1729164391321,
+      "updatedAt": 1729164399413
     }
   ],
   "tags": [
