@@ -119,6 +119,26 @@
       "id": "PoO2O3Rm",
       "createdAt": 1729592825287,
       "updatedAt": 1729592889036
+    },
+    {
+      "name": "android",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "kotlin",
+      "id": "twJ-w0RU",
+      "createdAt": 1729995664649,
+      "updatedAt": 1729995682092
+    },
+    {
+      "name": "sql",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "mysql",
+      "id": "mdpwqphi",
+      "createdAt": 1730010819388,
+      "updatedAt": 1730010903566
     }
   ],
   "snippets": [
@@ -1373,6 +1393,203 @@
       "id": "AbH3EmmW",
       "createdAt": 1729592837789,
       "updatedAt": 1729594147444
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "Enumeration",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "java",
+          "value": "Enumeration<String> contextParams = this.getServletConfig().getServletContext().getInitParameterNames();\nwhile (contextParams.hasMoreElements()) {\n    System.out.println(contextParams.nextElement());\n}"
+        }
+      ],
+      "id": "H2H5bD0j",
+      "createdAt": 1729686223232,
+      "updatedAt": 1729686318683
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "file operation",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "java",
+          "value": ""
+        }
+      ],
+      "id": "21KruGVN",
+      "createdAt": 1729687924866,
+      "updatedAt": 1729687930030
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "8qmQazwt",
+      "tagsIds": [
+        "7pTrIPxa"
+      ],
+      "description": null,
+      "name": "sort",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "plain_text",
+          "value": "const iconDir = 'mdi-folder'\nconst iconFile = 'mdi-clipboard-text'\nconst classDir = 'bg-blue text-white'\nconst classFile = 'bg-grey-lighten-1 text-white'\n\nlet items = [\n    {\n        \"dir\": false,\n        \"modify\": 1729691508477,\n        \"name\": \"vk_swiftshader_icd.json\",\n        \"size\": 106,\n    },\n    { dir: true, name: 'dir1', modify: 1729691508177, size: 0, },\n    { dir: false, name: 'windows11.ios', modify: 1729691508476, size: 6768468768, },\n]\nconst sortBy = \"name\"\nconst sortRevert = false\nconst fileMae = false\nitems.sort((a, b) => {\n    // Sort by dir (true comes before false)\n    if (a.dir != b.dir) {\n        return fileMae ? a.dir - b.dir : b.dir - a.dir;\n    }\n    // Sort by name if dir is the same\n    return sortRevert ? b[sortBy].localeCompare(a.name) : a[sortBy].localeCompare(b.name);\n});"
+        }
+      ],
+      "id": "PFkiSRvG",
+      "createdAt": 1729698448452,
+      "updatedAt": 1729698459429
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "twJ-w0RU",
+      "tagsIds": [],
+      "description": null,
+      "name": "adb",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "kotlin",
+          "value": ""
+        }
+      ],
+      "id": "c3yFPa0K",
+      "createdAt": 1729995684313,
+      "updatedAt": 1729995689739
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "twJ-w0RU",
+      "tagsIds": [],
+      "description": null,
+      "name": "adb shell",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "sh",
+          "value": "cat /sys/class/thermal/thermal_zone0/temp\n=> 31000\n(31 degress)"
+        }
+      ],
+      "id": "7R69n-CJ",
+      "createdAt": 1729995696227,
+      "updatedAt": 1729995763766
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mdpwqphi",
+      "tagsIds": [],
+      "description": null,
+      "name": "index",
+      "content": [
+        {
+          "label": "unique index",
+          "language": "mysql",
+          "value": "-- create unique index\nCREATE UNIQUE INDEX [index_name] ON [table_name]([col_name]);\n\n-- drop a index\nDROP INDEX [index_name];\n\n-- create unique constraint will auto create unique index\nALTER TABLE [table_name] ADD CONSTRAINT [constraint_name] UNIQUE ([col_name]);"
+        },
+        {
+          "label": "子片段 2",
+          "language": "mysql",
+          "value": ""
+        }
+      ],
+      "id": "wNyYssz6",
+      "createdAt": 1730010827372,
+      "updatedAt": 1730011205993
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "JDBCUtil",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "java",
+          "value": "import com.zaxxer.hikari.HikariConfig;\nimport com.zaxxer.hikari.HikariDataSource;\n\nimport javax.sql.DataSource;\nimport java.io.InputStream;\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\nimport java.util.Date;\nimport java.util.LinkedList;\nimport java.util.List;\nimport java.util.Properties;\n\n/**\n * JDBC Util class\n * 1. connection pool maintenance\n * 2. get connection\n * 3. recycle connection\n * 4. bind one connectino to one thread\n */\npublic class JDBCUtil {\n    private static volatile DataSource ds;\n    private static ThreadLocal<Connection> threadConn = new ThreadLocal<>();\n\n    private static void genDataSource() {\n        try {\n            Properties prop = new Properties();\n            InputStream in = JDBCUtil.class.getClassLoader().getResourceAsStream(\"db_h.properties\");\n            prop.load(in);\n            HikariConfig config = new HikariConfig(prop);\n            ds = new HikariDataSource(config);\n        } catch (Exception e) {\n            e.printStackTrace();\n        }\n    }\n\n    public static synchronized DataSource getDataSource() {\n        if (ds == null) {\n            System.out.println(\"construct DataSource\");\n            genDataSource();\n        }\n        return ds;\n    }\n\n    public static Connection getConnection() throws SQLException {\n        Connection conn = threadConn.get();\n        if (conn == null) {\n            conn = JDBCUtilWithThreadLocal.getDataSource().getConnection();\n            threadConn.set(conn);\n        }\n        return conn;\n    }\n\n    public static void release() throws SQLException {\n        Connection conn = threadConn.get();\n        if (conn != null && conn.getAutoCommit()) {\n            threadConn.remove();\n            conn.close();\n        } else {\n            System.out.println(\"change connection autocommit to true before release\");\n        }\n    }\n}\n"
+        }
+      ],
+      "id": "_OfPgq3j",
+      "createdAt": 1730442665245,
+      "updatedAt": 1730443741203
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "Hikari",
+      "content": [
+        {
+          "label": "Usage",
+          "language": "java",
+          "value": "package com.li.schedule.sqlTest.advanced;\n\nimport com.li.schedule.sqlTest.advanced.pojo.Employee;\nimport com.zaxxer.hikari.HikariConfig;\nimport com.zaxxer.hikari.HikariDataSource;\nimport org.junit.jupiter.api.Test;\n\nimport javax.sql.DataSource;\nimport java.io.InputStream;\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.util.Date;\nimport java.util.LinkedList;\nimport java.util.List;\nimport java.util.Properties;\n\npublic class HikariTest {\n    @Test\n    public void hardTest() throws Exception {\n        // create hikari datasource and configure\n        HikariDataSource hds = new HikariDataSource();\n        hds.setDriverClassName(\"com.mysql.cj.jdbc.Driver\");\n        hds.setJdbcUrl(\"jdbc:mysql://127.0.0.1:13306/webtest\");\n        hds.setUsername(\"root\");\n        hds.setPassword(\"lijunjie\");\n        hds.setMinimumIdle(5);\n        hds.setMaximumPoolSize(10);\n\n        System.out.println(hds);\n\n        List<Thread> threads = new LinkedList<>();\n        for (int i = 1; i < 12; i++) {\n            final String emp_id = String.valueOf(i);\n            threads.add(new Thread(() -> {\n                System.out.println(Thread.currentThread().getId());\n                try (Connection conn = hds.getConnection()) {\n                    System.out.println(conn);\n                    Thread.sleep(2000);\n                    try (PreparedStatement ps = conn.prepareStatement(\"SELECT * FROM `t_emp` WHERE `emp_id`=?\")) {\n                        ps.setString(1, emp_id);\n                        try (ResultSet rs = ps.executeQuery()) {\n                            while (rs.next())\n                                System.out.println(\n                                        new Employee(\n                                                rs.getInt(\"emp_id\"),\n                                                rs.getString(\"emp_name\"),\n                                                rs.getInt(\"emp_age\"),\n                                                rs.getDouble(\"emp_salary\")\n                                        )\n                                );\n                        }\n                    }\n                } catch (Exception e) {\n                    e.printStackTrace();\n                }\n            }));\n        }\n        for (Thread thread : threads)\n            thread.start();\n\n        for (Thread thread : threads)\n            thread.join();\n\n    }\n\n    @Test\n    public void softTest() throws Exception {\n        // create properties set\n        Properties hikariProperties = new Properties();\n        // read properties file\n        InputStream propertiesInputStream = this.getClass().getClassLoader().getResourceAsStream(\"db_h.properties\");\n        hikariProperties.load(propertiesInputStream);\n        // create HikariConfig object with properties set\n        HikariConfig hikariConfig = new HikariConfig(hikariProperties);\n        // create HikariDataSource with HikariConfig\n        HikariDataSource hds = new HikariDataSource(hikariConfig);\n\n        System.out.println(hds);\n\n        Date start = new Date();\n\n        List<Thread> threads = new LinkedList<>();\n        for (int i = 1; i < 12; i++) {\n            final String emp_id = String.valueOf(i);\n            threads.add(new Thread(() -> {\n                System.out.println(Thread.currentThread().getId());\n                try (Connection conn = hds.getConnection()) {\n                    System.out.println(conn);\n                    Thread.sleep(2000);\n                    try (PreparedStatement ps = conn.prepareStatement(\"SELECT * FROM `t_emp` WHERE `emp_id`=?\")) {\n                        ps.setString(1, emp_id);\n                        try (ResultSet rs = ps.executeQuery()) {\n                            while (rs.next())\n                                System.out.println(\n                                        new Employee(\n                                                rs.getInt(\"emp_id\"),\n                                                rs.getString(\"emp_name\"),\n                                                rs.getInt(\"emp_age\"),\n                                                rs.getDouble(\"emp_salary\")\n                                        )\n                                );\n                        }\n                    }\n                } catch (Exception e) {\n                    e.printStackTrace();\n                }\n            }));\n        }\n        for (Thread thread : threads)\n            thread.start();\n\n        for (Thread thread : threads)\n            thread.join();\n\n        System.out.println(String.format(\"use time: %dms\", System.currentTimeMillis() - start.getTime()));\n    }\n}\n"
+        },
+        {
+          "label": "properties",
+          "language": "properties",
+          "value": "driverClassName=com.mysql.cj.jdbc.Driver\njdbcUrl=jdbc:mysql://127.0.0.1:13306/webtest\nusername=root\npassword=lijunjie\nminimumIdle=5\nmaximumPoolSize=10"
+        }
+      ],
+      "id": "Hk937jtY",
+      "createdAt": 1730442723263,
+      "updatedAt": 1730442804959
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "Druid",
+      "content": [
+        {
+          "label": "Usage",
+          "language": "java",
+          "value": "package com.li.schedule.sqlTest.advanced;\n\nimport com.alibaba.druid.pool.DruidDataSource;\nimport com.alibaba.druid.pool.DruidDataSourceFactory;\nimport com.li.schedule.sqlTest.advanced.pojo.Employee;\nimport org.junit.jupiter.api.Test;\n\nimport javax.sql.DataSource;\nimport java.io.InputStream;\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\nimport java.util.Date;\nimport java.util.LinkedList;\nimport java.util.List;\nimport java.util.Properties;\n\npublic class DruidTest {\n\n    @Test\n    public void hardDruid() throws Exception {\n        DruidDataSource dds = new DruidDataSource();\n        dds.setDriverClassName(\"com.mysql.cj.jdbc.Driver\");\n        dds.setUsername(\"root\");\n        dds.setPassword(\"lijunjie\");\n        dds.setUrl(\"jdbc:mysql://127.0.0.1:13306/webtest\");\n        dds.setInitialSize(5);\n        dds.setMaxActive(10);\n\n        List<Thread> threads = new LinkedList<>();\n        for (int i = 1; i < 12; i++) {\n            final String emp_id = String.valueOf(i);\n            threads.add(new Thread(() -> {\n                System.out.println(Thread.currentThread().getId());\n                try (Connection conn = dds.getConnection()) {\n                    System.out.println(conn);\n                    Thread.sleep(2000);\n                    try (PreparedStatement ps = conn.prepareStatement(\"SELECT * FROM `t_emp` WHERE `emp_id`=?\")) {\n                        ps.setString(1, emp_id);\n                        try (ResultSet rs = ps.executeQuery()) {\n                            while (rs.next())\n                                System.out.println(\n                                        new Employee(\n                                                rs.getInt(\"emp_id\"),\n                                                rs.getString(\"emp_name\"),\n                                                rs.getInt(\"emp_age\"),\n                                                rs.getDouble(\"emp_salary\")\n                                        )\n                                );\n                        }\n                    }\n                } catch (Exception e) {\n                    e.printStackTrace();\n                }\n            }));\n        }\n        for (Thread thread : threads)\n            thread.start();\n\n        for (Thread thread : threads)\n            thread.join();\n\n    }\n\n    @Test\n    public void softDruid() throws Exception {\n        // get properties context\n        Properties druidProperties = new Properties();\n        InputStream propertiesInputStream = this.getClass().getClassLoader().getResourceAsStream(\"db.properties\");\n        druidProperties.load(propertiesInputStream);\n\n        // create DruidDataSource by DruidDataSourceFactory\n        DataSource dds = DruidDataSourceFactory.createDataSource(druidProperties);\n        System.out.println(dds);\n\n        Date start = new Date();\n\n        List<Thread> threads = new LinkedList<>();\n        for (int i = 1; i < 12; i++) {\n            final String emp_id = String.valueOf(i);\n            threads.add(new Thread(() -> {\n                System.out.println(Thread.currentThread().getId());\n                try (Connection conn = dds.getConnection()) {\n                    System.out.println(conn);\n                    Thread.sleep(2000);\n                    try (PreparedStatement ps = conn.prepareStatement(\"SELECT * FROM `t_emp` WHERE `emp_id`=?\")) {\n                        ps.setString(1, emp_id);\n                        try (ResultSet rs = ps.executeQuery()) {\n                            while (rs.next())\n                                System.out.println(\n                                        new Employee(\n                                                rs.getInt(\"emp_id\"),\n                                                rs.getString(\"emp_name\"),\n                                                rs.getInt(\"emp_age\"),\n                                                rs.getDouble(\"emp_salary\")\n                                        )\n                                );\n                        }\n                    }\n                } catch (Exception e) {\n                    e.printStackTrace();\n                }\n            }));\n        }\n        for (Thread thread : threads)\n            thread.start();\n\n        for (Thread thread : threads)\n            thread.join();\n\n        System.out.println(String.format(\"use time: %dms\", System.currentTimeMillis() - start.getTime()));\n    }\n}\n"
+        },
+        {
+          "label": "properties",
+          "language": "properties",
+          "value": "driverClassName=com.mysql.cj.jdbc.Driver\nurl=jdbc:mysql://127.0.0.1:13306/webtest\nusername=root\npassword=lijunjie\ninitialSize=5\nmaxAcitve=10"
+        }
+      ],
+      "id": "Y92k6ez5",
+      "createdAt": 1730442729363,
+      "updatedAt": 1730443055717
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "BaseDao",
+      "content": [
+        {
+          "label": "子片段 1",
+          "language": "java",
+          "value": "package com.li.schedule.dao.impl;\n\nimport com.li.schedule.utils.JDBCUtil;\n\nimport java.security.MessageDigest;\nimport java.security.NoSuchAlgorithmException;\n\nimport java.lang.reflect.Field;\nimport java.sql.*;\nimport java.util.LinkedList;\nimport java.util.List;\n\npublic class BaseDao {\n    /**\n     * general update one row\n     *\n     * @param sql:    sql setence\n     * @param params: variable in sql\n     * @return affect row\n     * @throws Exception\n     */\n    public int executeUpdate(String sql, Object... params) throws Exception {\n        Connection conn = JDBCUtil.getConnection();\n        System.out.println(String.format(\"[Connection]: %s, [autoCommit]: %s\" , conn, conn.getAutoCommit()));\n        int row = 0;\n        try (PreparedStatement ps = conn.prepareStatement(sql)) {\n            for (int i = 0; i < params.length; i++) {\n                ps.setObject(i + 1, params[i]);\n            }\n            row = ps.executeUpdate();\n        }\n        JDBCUtil.release();\n        return row;\n    }\n\n    /**\n     * general insert one row with generated keys return\n     *\n     * @param sql:    sql setence\n     * @param params: variable in sql\n     * @return affect row\n     * @throws Exception\n     */\n    public int executeInsertWithGenKey(String sql, Object... params) throws Exception {\n        Connection conn = JDBCUtil.getConnection();\n        int GENERATED_KEY = -1;\n        Timestamp TIMESTAMP = null;\n        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {\n            for (int i = 0; i < params.length; i++) {\n                ps.setObject(i + 1, params[i]);\n            }\n            int row = ps.executeUpdate();\n            if (row > 0) {\n                try (ResultSet rs = ps.getGeneratedKeys()) {\n                    if (rs.next()) {\n                        GENERATED_KEY = rs.getInt(1);\n                    }\n                }\n            }\n        }\n        JDBCUtil.release();\n        return GENERATED_KEY;\n    }\n\n    /**\n     * general query\n     *\n     * @param clazz:  DAO object class\n     * @param sql:    sql setence\n     * @param params: variable in sql\n     * @return query result\n     * @throws\n     */\n    public <T> List<T> executeQuery(Class<T> clazz, String sql, Object... params) throws Exception {\n        Connection conn = JDBCUtil.getConnection();\n        List<T> clazzList = new LinkedList<>();\n        try (PreparedStatement ps = conn.prepareStatement(sql)) {\n            for (int i = 0; i < params.length; i++) {\n                ps.setObject(i + 1, params[i]);\n            }\n            try (ResultSet rs = ps.executeQuery()) {\n                ResultSetMetaData rsmd = rs.getMetaData();\n                int columnCount = rsmd.getColumnCount();\n                while (rs.next()) {\n                    T t = clazz.getDeclaredConstructor().newInstance();\n                    for (int i = 1; i <= columnCount; i++) {\n                        String fieldName = rsmd.getColumnLabel(i);\n                        Field field = clazz.getDeclaredField(fieldName);\n                        field.setAccessible(true);\n                        field.set(t, rs.getObject(i));\n                        field.setAccessible(false);\n                    }\n                    clazzList.add(t);\n                }\n            }\n        } catch (Exception e) {\n            e.printStackTrace();\n        }\n        JDBCUtil.release();\n        return clazzList;\n    }\n\n    /**\n     * general only first row of query\n     *\n     * @param clazz:  DAO object class\n     * @param sql:    sql setence\n     * @param params: variable in sql\n     * @return query result\n     * @throws\n     */\n    public <T> T executeQuery4OneRow(Class<T> clazz, String sql, Object... params) throws Exception {\n        List<T> result = this.executeQuery(clazz, sql, params);\n        if (result.size() > 0) {\n            return result.get(0);\n        } else return null;\n    }\n\n    public static String MD5(String input) {\n        try {\n            MessageDigest md = MessageDigest.getInstance(\"MD5\");\n            byte[] messageDigest = md.digest(input.getBytes());\n            // Convert byte array into signum representation\n            StringBuilder sb = new StringBuilder();\n            for (byte b : messageDigest) {\n                sb.append(String.format(\"%02x\", b));\n            }\n            return sb.toString();\n        } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(e);\n        }\n    }\n}\n"
+        }
+      ],
+      "id": "MHNAR16x",
+      "createdAt": 1730443704269,
+      "updatedAt": 1730443781611
     }
   ],
   "tags": [
@@ -1381,6 +1598,18 @@
       "id": "7xSxQ3Xg",
       "createdAt": 1705650814819,
       "updatedAt": 1705650814819
+    },
+    {
+      "name": "object array",
+      "id": "7pTrIPxa",
+      "createdAt": 1729698459359,
+      "updatedAt": 1729698459359
+    },
+    {
+      "name": "unique index",
+      "id": "DRCnm5ma",
+      "createdAt": 1730010904478,
+      "updatedAt": 1730010904478
     }
   ]
 }
