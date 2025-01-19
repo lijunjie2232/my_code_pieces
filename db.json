@@ -139,6 +139,16 @@
       "id": "mdpwqphi",
       "createdAt": 1730010819388,
       "updatedAt": 1730010903566
+    },
+    {
+      "name": "opencv",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "python",
+      "id": "mgv1LCgf",
+      "createdAt": 1737197456615,
+      "updatedAt": 1737197590829
     }
   ],
   "snippets": [
@@ -1631,6 +1641,267 @@
       "id": "yQA1XUnQ",
       "createdAt": 1731243915456,
       "updatedAt": 1731243921155
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PoO2O3Rm",
+      "tagsIds": [],
+      "description": null,
+      "name": "list stream map",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "java",
+          "value": "public class EmployeeController {\n    @GetMapping(\"/employees\")\n    public Result getEmployees() {\n        List<Employee> employees = employeeService.getEmployees();\n        List<EmployeeVO> employeeVOs = employees.stream().map(employee -> {\n            EmployeeVO employeeVO = new EmployeeVO();\n            BeanUtils.copyProperties(employee, employeeVO);\n            return employeeVO;\n        }).collect(Collectors.toList());\n        return  Result.ok(employeeVOs);\n    }\n}"
+        }
+      ],
+      "id": "CfowZH8X",
+      "createdAt": 1736654638267,
+      "updatedAt": 1736654661349
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mdpwqphi",
+      "tagsIds": [],
+      "description": null,
+      "name": "auto timestamp",
+      "content": [
+        {
+          "label": "insert auto time",
+          "language": "mysql",
+          "value": "CREATE TABLE `login` (\n    `id` int(11) NOT NULL AUTO_INCREMENT,\n    `username` varchar(255) NOT NULL,\n    `time` datetime DEFAULT CURRENT_TIMESTAMP,\n    PRIMARY KEY (`id`)\n)"
+        },
+        {
+          "label": "update auto time",
+          "language": "mysql",
+          "value": "CREATE TABLE `login` (\n    `id` int(11) NOT NULL AUTO_INCREMENT,\n    `username` varchar(255) NOT NULL,\n    `time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n    PRIMARY KEY (`id`)\n);\n"
+        }
+      ],
+      "id": "EaRZhy-_",
+      "createdAt": 1736825270694,
+      "updatedAt": 1736825596084
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mdpwqphi",
+      "tagsIds": [],
+      "description": null,
+      "name": "join",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "plain_text",
+          "value": "INNER JOIN: 返回两个表中满足连接条件的所有行。\n\nLEFT JOIN: 返回左表中的所有行，以及右表中满足连接条件的行。如果右表中没有匹配的行，则右表的列将为 NULL。\n\nRIGHT JOIN: 返回右表中的所有行，以及左表中满足连接条件的行。如果左表中没有匹配的行，则左表的列将为 NULL。\n\nFULL JOIN: 返回两个表中的所有行，如果某个表中没有匹配的行，则该表的列将为 NULL。\n\nCROSS JOIN: 返回两个表的笛卡尔积，不需要指定连接条件。\n\nSELF JOIN: 一个表与自身进行连接，通常用于查找表中具有相同列值的行。\n"
+        },
+        {
+          "label": "example",
+          "language": "mysql",
+          "value": "-- find all order by user including order_items with goods' name\nselect o.id as order_id, o.user_id, o.order_date, u.email, oi.good_name, oi.quantity, oi.price\nfrom `order` o\n         join `user` u on o.user_id = u.id\n         left join (select oi.order_id as order_id, oi.quantity as quantity, oi.price as price, g.name as good_name\n                    from `order_item` oi\n                             join `goods` g on oi.goods_id = g.id) as `oi` on oi.order_id = o.id;"
+        },
+        {
+          "label": "INNER JOIN",
+          "language": "mysql",
+          "value": "-- INNER JOIN\n-- 定义: 返回两个表中满足连接条件的所有行。\n-- 行为: 只有当两个表中存在匹配的行时，才会返回这些行。\n-- 结果: 如果某个表中没有匹配的行，则该行不会出现在结果集中。\n\nSELECT \n    o.id AS order_id,\n    o.user_id,\n    o.order_date,\n    u.email AS email_address,\n    'personal' AS email_type,\n    oi.id AS order_item_id,\n    oi.goods_id,\n    oi.quantity,\n    oi.price\nFROM `order` o\nINNER JOIN user u ON o.user_id = u.id\nINNER JOIN order_item oi ON o.id = oi.order_id;\n"
+        },
+        {
+          "label": "LEFT JOIN",
+          "language": "mysql",
+          "value": "-- LEFT JOIN (或 LEFT OUTER JOIN)\n-- 定义: 返回左表中的所有行，以及右表中满足连接条件的行。如果右表中没有匹配的行，则结果集中右表的列将包含 NULL 值。\n-- 行为: 即使右表中没有匹配的行，左表中的所有行仍然会出现在结果集中。\n-- 结果: 如果某个表中没有匹配的行，则该表的列将为 NULL。\n\nSELECT \n    o.id AS order_id,\n    o.user_id,\n    o.order_date,\n    u.email AS email_address,\n    'personal' AS email_type,\n    oi.id AS order_item_id,\n    oi.goods_id,\n    oi.quantity,\n    oi.price\nFROM `order` o\nLEFT JOIN user u ON o.user_id = u.id\nLEFT JOIN order_item oi ON o.id = oi.order_id;\n"
+        },
+        {
+          "label": "RIGHT JOIN ",
+          "language": "mysql",
+          "value": "-- RIGHT JOIN (或 RIGHT OUTER JOIN)\n-- 定义: 返回右表中的所有行，以及左表中满足连接条件的行。如果左表中没有匹配的行，则结果集中左表的列将包含 NULL 值。\n-- 行为: 即使左表中没有匹配的行，右表中的所有行仍然会出现在结果集中。\n-- 结果: 如果某个表中没有匹配的行，则该表的列将为 NULL。\n\nSELECT \n    o.id AS order_id,\n    o.user_id,\n    o.order_date,\n    u.email AS email_address,\n    'personal' AS email_type,\n    oi.id AS order_item_id,\n    oi.goods_id,\n    oi.quantity,\n    oi.price\nFROM `order` o\nRIGHT JOIN user u ON o.user_id = u.id\nRIGHT JOIN order_item oi ON o.id = oi.order_id;\n"
+        },
+        {
+          "label": "FULL JOIN",
+          "language": "mysql",
+          "value": "-- FULL JOIN (或 FULL OUTER JOIN)\n-- 定义: 返回两个表中的所有行，如果某个表中没有匹配的行，则结果集中该表的列将包含 NULL 值。\n-- 行为: 即使某个表中没有匹配的行，两个表中的所有行仍然会出现在结果集中。\n-- 结果: 如果某个表中没有匹配的行，则该表的列将为 NULL。\n\nSELECT \n    o.id AS order_id,\n    o.user_id,\n    o.order_date,\n    u.email AS email_address,\n    'personal' AS email_type,\n    oi.id AS order_item_id,\n    oi.goods_id,\n    oi.quantity,\n    oi.price\nFROM `order` o\nFULL JOIN user u ON o.user_id = u.id\nFULL JOIN order_item oi ON o.id = oi.order_id;\n"
+        },
+        {
+          "label": "CROSS JOIN",
+          "language": "mysql",
+          "value": "-- CROSS JOIN\n-- 定义: 返回两个表的笛卡尔积，即左表中的每一行与右表中的每一行组合。\n-- 行为: 不需要指定连接条件。\n-- 结果: 结果集的大小是左表和右表大小的乘积。\n\nSELECT \n    o.id AS order_id,\n    o.user_id,\n    o.order_date,\n    u.email AS email_address,\n    'personal' AS email_type\nFROM `order` o\nCROSS JOIN user u;\n"
+        },
+        {
+          "label": "SELF JOIN",
+          "language": "mysql",
+          "value": "-- SELF JOIN\n-- 定义: 一个表与自身进行连接。\n-- 行为: 通常用于查找表中具有相同列值的行。\n-- 结果: 返回表中满足连接条件的行。\n\nSELECT \n    e1.id AS employee_id,\n    e1.name AS employee_name,\n    e2.id AS manager_id,\n    e2.name AS manager_name\nFROM employee e1\nLEFT JOIN employee e2 ON e1.manager_id = e2.id;\n"
+        }
+      ],
+      "id": "BlIH7Jdw",
+      "createdAt": 1737171571568,
+      "updatedAt": 1737172349667
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mgv1LCgf",
+      "tagsIds": [],
+      "description": null,
+      "name": "morphology",
+      "content": [
+        {
+          "label": "sumary",
+          "language": "plain_text",
+          "value": "OpenCV形态学方法介绍\n\n1. 腐蚀 (Erosion)\n  作用: 侵蚀图像中的白色区域，减少白色区域的大小。\n  应用场景: 去除小的噪声点、断开相连的对象。\n2. 膨胀 (Dilation)\n  作用: 膨胀图像中的白色区域，增加白色区域的大小。\n  应用场景: 填充对象中的小孔、连接相邻的对象。\n3. 开运算 (Opening)\n  作用: 先腐蚀后膨胀，用于去除小的物体和噪声。\n  应用场景: 清除图像中的小颗粒噪声。\n4. 闭运算 (Closing)\n  作用: 先膨胀后腐蚀，用于填充对象内部的小孔。\n  应用场景: 修复对象内部的小孔或裂痕。\n5. 梯度 (Morphological Gradient)\n  作用: 计算膨胀后的图像与腐蚀后的图像之间的差异。\n  应用场景: 边缘检测。\n6. 顶帽 (Top Hat)\n  作用: 原始图像减去开运算的结果。\n  应用场景: 提取比背景亮的细节。\n7. 黑帽 (Black Hat)\n  作用: 闭运算的结果减去原始图像。\n  应用场景: 提取比背景暗的细节。\n\n\n实际应用场景实例\n\n1. 文本识别前预处理\n\t使用开运算去除文本图像中的噪声，使OCR（光学字符识别）更准确。\n2. 医学图像处理\n\t使用闭运算修复CT扫描图像中血管的断裂部分，便于后续分析。\n3. 工业缺陷检测\n\t使用梯度检测金属表面的划痕或裂纹，确保产品质量。\n4. 车牌识别\n\t使用腐蚀和膨胀分离车牌字符，提高字符分割的准确性。"
+        },
+        {
+          "label": "腐蚀 (Erosion)",
+          "language": "python",
+          "value": "# 腐蚀操作\n# 作用: 侵蚀图像中的白色区域，减少白色区域的大小。\n# 应用场景: 去除小的噪声点、断开相连的对象。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\nerosion = cv2.erode(img, kernel, iterations=1)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Eroded Image', erosion)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "膨胀 (Dilation)",
+          "language": "python",
+          "value": "# 膨胀操作\n# 作用: 膨胀图像中的白色区域，增加白色区域的大小。\n# 应用场景: 填充对象中的小孔、连接相邻的对象。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\ndilation = cv2.dilate(img, kernel, iterations=1)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Dilated Image', dilation)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "开运算 (Opening)",
+          "language": "python",
+          "value": "# 开运算\n# 作用: 先腐蚀后膨胀，用于去除小的物体和噪声。\n# 应用场景: 清除图像中的小颗粒噪声。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\nopening = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Opened Image', opening)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "闭运算 (Closing)",
+          "language": "python",
+          "value": "# 闭运算\n# 作用: 先膨胀后腐蚀，用于填充对象内部的小孔。\n# 应用场景: 修复对象内部的小孔或裂痕。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\nclosing = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Closed Image', closing)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "梯度 (Morphological Gradient)",
+          "language": "python",
+          "value": "# 梯度\n# 作用: 计算膨胀后的图像与腐蚀后的图像之间的差异。\n# 应用场景: 边缘检测。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\ngradient = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, kernel)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Gradient Image', gradient)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "顶帽 (Top Hat)",
+          "language": "python",
+          "value": "# 顶帽\n# 作用: 原始图像减去开运算的结果。\n# 应用场景: 提取比背景亮的细节。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\ntophat = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Top Hat Image', tophat)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "黑帽 (Black Hat)",
+          "language": "python",
+          "value": "# 黑帽\n# 作用: 闭运算的结果减去原始图像。\n# 应用场景: 提取比背景暗的细节。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimg = cv2.imread('input_image.jpg', 0)\n\n# 定义结构元素\nkernel = np.ones((5, 5), np.uint8)\n\nblackhat = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel)\n\n# 显示结果\ncv2.imshow('Original Image', img)\ncv2.imshow('Black Hat Image', blackhat)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        }
+      ],
+      "id": "Vlxg3TwD",
+      "createdAt": 1737197469536,
+      "updatedAt": 1737197922147
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mgv1LCgf",
+      "tagsIds": [],
+      "description": null,
+      "name": "License Plate Recognition (LPR)",
+      "content": [
+        {
+          "label": "1. 图像预处理",
+          "language": "python",
+          "value": "# 首先，我们需要对输入图像进行预处理，包括灰度化、去噪和平滑处理。\nimport cv2\nimport numpy as np\n\n# 读取图像\nimage = cv2.imread('car.jpg')\n\n# 转换为灰度图像\ngray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n\n# 高斯模糊去噪\nblurred = cv2.GaussianBlur(gray, (5, 5), 0)\n\n# 显示预处理后的图像\ncv2.imshow('Blurred Image', blurred)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "2. 边缘检测",
+          "language": "python",
+          "value": "# 使用Canny边缘检测器来检测图像中的边缘。\n# Canny边缘检测\nedges = cv2.Canny(blurred, 50, 150)\n\n# 显示边缘检测结果\ncv2.imshow('Edges', edges)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "3. 形态学操作",
+          "language": "python",
+          "value": "# 3 膨胀操作\n# 膨胀操作可以增强车牌区域的边缘，使其更加明显。\n# 定义结构元素\nkernel = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 1))\n\n# 膨胀操作\ndilation = cv2.dilate(edges, kernel, iterations=3)\n\n# 显示膨胀后的图像\ncv2.imshow('Dilated Image', dilation)\ncv2.waitKey(0)\ncv2.destroyAllWindows()\n"
+        },
+        {
+          "label": "4. 查找轮廓",
+          "language": "python",
+          "value": "# 使用cv2.findContours函数查找图像中的轮廓，并筛选出可能的车牌区域。\n# 查找轮廓\ncontours, _ = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\n\n# 筛选出可能的车牌区域\nplate_contours = []\nfor contour in contours:\n    # 计算轮廓的边界框\n    x, y, w, h = cv2.boundingRect(contour)\n    \n    # 根据宽高比筛选出可能的车牌区域\n    aspect_ratio = w / float(h)\n    if 2.5 <= aspect_ratio <= 5.5:\n        plate_contours.append(contour)\n\n# 绘制可能的车牌区域\nplate_image = image.copy()\ncv2.drawContours(plate_image, plate_contours, -1, (0, 255, 0), 2)\n\n# 显示可能的车牌区域\ncv2.imshow('Possible License Plates', plate_image)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "5. 提取车牌区域",
+          "language": "python",
+          "value": "# 从筛选出的轮廓中提取车牌区域，并进一步处理。\n# 提取车牌区域\nif len(plate_contours) > 0:\n    # 假设第一个轮廓是最可能的车牌区域\n    x, y, w, h = cv2.boundingRect(plate_contours[0])\n    plate_region = image[y:y+h, x:x+w]\n    \n    # 显示车牌区域\n    cv2.imshow('License Plate Region', plate_region)\n    cv2.waitKey(0)\n    cv2.destroyAllWindows()\nelse:\n    print(\"No license plate found.\")"
+        },
+        {
+          "label": "6. 车牌字符分割与识别",
+          "language": "python",
+          "value": "# 在提取出车牌区域后，可以进一步使用字符分割和字符识别技术来识别车牌上的字符。这里我们仅展示如何使用形态学操作来处理车牌区域。\n# 将车牌区域转换为灰度图像\nplate_gray = cv2.cvtColor(plate_region, cv2.COLOR_BGR2GRAY)\n\n# 二值化处理\n_, plate_binary = cv2.threshold(plate_gray, 150, 255, cv2.THRESH_BINARY_INV)\n\n# 显示二值化后的车牌图像\ncv2.imshow('Binary Plate Image', plate_binary)\ncv2.waitKey(0)\ncv2.destroyAllWindows()\n\n# 查找车牌中的字符轮廓\nchar_contours, _ = cv2.findContours(plate_binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\n\n# 筛选出可能的字符轮廓\nchar_contours = sorted(char_contours, key=lambda ctr: cv2.boundingRect(ctr)[0])\n\n# 绘制字符轮廓\nchar_image = plate_region.copy()\nfor contour in char_contours:\n    x, y, w, h = cv2.boundingRect(contour)\n    if w > 10 and h > 20:  # 过滤掉过小的轮廓\n        cv2.rectangle(char_image, (x, y), (x+w, y+h), (0, 255, 0), 2)\n\n# 显示字符轮廓\ncv2.imshow('Characters in License Plate', char_image)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        },
+        {
+          "label": "7. OCR",
+          "language": "python",
+          "value": "# 使用字符识别模型（如Tesseract OCR）来识别分割出的字符。\n# pip install pytesseract\n# 遍历分割出的字符轮廓，提取每个字符并进行识别。\n\nimport pytesseract\n\n# 初始化Tesseract\npytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'  # 根据你的安装路径修改\n\n# 存储识别结果\nrecognized_chars = []\n\n# 遍历字符轮廓\nfor contour in char_contours:\n    x, y, w, h = cv2.boundingRect(contour)\n    if w > 10 and h > 20:  # 过滤掉过小的轮廓\n        # 提取字符区域\n        char_image = plate_binary[y:y+h, x:x+w]\n        \n        # 识别字符\n        char = pytesseract.image_to_string(char_image, config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')\n        recognized_chars.append(char.strip())\n\n# 显示识别结果\nprint(\"Recognized Characters:\", ''.join(recognized_chars))\n\n# 输出识别结果\nrecognized_plate = ''.join(recognized_chars)\nprint(\"Recognized License Plate:\", recognized_plate)\n\n# 保存识别结果到文件\nwith open('recognized_plate.txt', 'w') as file:\n    file.write(recognized_plate)\n"
+        },
+        {
+          "label": "Full Example",
+          "language": "python",
+          "value": "import cv2\nimport numpy as np\nimport pytesseract\n\n# 读取图像\nimage = cv2.imread('car.jpg')\n\n# 转换为灰度图像\ngray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n\n# 高斯模糊去噪\nblurred = cv2.GaussianBlur(gray, (5, 5), 0)\n\n# Canny边缘检测\nedges = cv2.Canny(blurred, 50, 150)\n\n# 定义结构元素\nkernel = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 1))\n\n# 膨胀操作\ndilation = cv2.dilate(edges, kernel, iterations=3)\n\n# 查找轮廓\ncontours, _ = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\n\n# 筛选出可能的车牌区域\nplate_contours = []\nfor contour in contours:\n    x, y, w, h = cv2.boundingRect(contour)\n    aspect_ratio = w / float(h)\n    if 2.5 <= aspect_ratio <= 5.5:\n        plate_contours.append(contour)\n\n# 提取车牌区域\nif len(plate_contours) > 0:\n    x, y, w, h = cv2.boundingRect(plate_contours[0])\n    plate_region = image[y:y+h, x:x+w]\nelse:\n    print(\"No license plate found.\")\n    exit()\n\n# 将车牌区域转换为灰度图像\nplate_gray = cv2.cvtColor(plate_region, cv2.COLOR_BGR2GRAY)\n\n# 二值化处理\n_, plate_binary = cv2.threshold(plate_gray, 150, 255, cv2.THRESH_BINARY_INV)\n\n# 定义结构元素\nkernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))\n\n# 膨胀操作\ndilation = cv2.dilate(plate_binary, kernel, iterations=1)\n\n# 查找字符轮廓\nchar_contours, _ = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\n\n# 筛选出可能的字符轮廓\nchar_contours = sorted(char_contours, key=lambda ctr: cv2.boundingRect(ctr)[0])\n\n# 初始化Tesseract\npytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'  # 根据你的安装路径修改\n\n# 存储识别结果\nrecognized_chars = []\n\n# 遍历字符轮廓\nfor contour in char_contours:\n    x, y, w, h = cv2.boundingRect(contour)\n    if w > 10 and h > 20:  # 过滤掉过小的轮廓\n        # 提取字符区域\n        char_image = plate_binary[y:y+h, x:x+w]\n        \n        # 识别字符\n        char = pytesseract.image_to_string(char_image, config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')\n        recognized_chars.append(char.strip())\n\n# 输出识别结果\nrecognized_plate = ''.join(recognized_chars)\nprint(\"Recognized License Plate:\", recognized_plate)\n\n# 保存识别结果到文件\nwith open('recognized_plate.txt', 'w') as file:\n    file.write(recognized_plate)\n\n# 显示结果\ncv2.imshow('Original Image', image)\ncv2.imshow('License Plate Region', plate_region)\ncv2.imshow('Binary Plate Image', plate_binary)\ncv2.imshow('Dilated Plate Image', dilation)\ncv2.imshow('Characters in License Plate', char_image)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+        }
+      ],
+      "id": "5_P2lwzo",
+      "createdAt": 1737198007215,
+      "updatedAt": 1737198380503
+    },
+    {
+      "isDeleted": true,
+      "isFavorites": false,
+      "folderId": "mgv1LCgf",
+      "tagsIds": [],
+      "description": null,
+      "name": "",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "e_mKRscV",
+      "createdAt": 1737212095408,
+      "updatedAt": 1737212108722
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mgv1LCgf",
+      "tagsIds": [],
+      "description": null,
+      "name": "pdf handling",
+      "content": [
+        {
+          "label": "xg",
+          "language": "python",
+          "value": "import fitz  # PyMuPDF\nimport cv2\nimport numpy as np\nfrom tqdm import tqdm\nfrom pathlib import Path\nfrom copy import deepcopy\nfrom OCREngine import OCREngine\nimport traceback\n\n\nclass Word:\n    def __init__(self, meaning: str, kanji: str, hina: str = None):\n        self.meaning = meaning.strip() if meaning and isinstance(meaning, str) else \"\"\n        self.hina = hina.strip() if hina and isinstance(hina, str) else \"\"\n        self.kanji = kanji.strip() if kanji and isinstance(kanji, str) else \"\"\n\n    def __str__(self):\n        return f\"(meaning: {self.meaning}, kanji: {self.kanji}, hina: {self.hina})\"\n\n    def __repr__(self):\n        return self.__str__()\n\n\n# 第一步：将 PDF 转换为图片\ndef pdf_to_image(\n    pdf_path,\n    page=-1,\n    outDir=None,\n    dpi=300,\n):\n    pdf_document = fitz.open(pdf_path)\n    pageList = {}\n    namePattern = \"page_%0\" + str(np.ceil(np.log10(len(pdf_document)))) + \"d.png\"\n    if page <= 0:  # return all pages\n        for idx, page in enumerate(tqdm(pdf_document, desc=\"pdf process\", leave=False)):\n            pageList[idx] = page.get_pixmap(dpi=dpi)\n    else:\n        idx = page - 1\n        assert isinstance(page, int) and page < len(\n            pdf_document\n        ), f\"Invalid page number, specified page should between 1 and {len(pdf_document)}\"\n        page = pdf_document[idx]  # 获取第一页\n        pageList[idx] = page.get_pixmap(dpi=dpi)\n    if outDir is not None:\n        for idx, page in tqdm(pageList.items(), desc=\"save image file\", leave=False):\n            image_path = outDir / (namePattern % (idx + 1))\n            page.save(image_path)\n    return pageList\n\n\ndef extract_target_region(image, templates, maxWitdh=-1, cutKana=False):\n    \"\"\"\n    从图像中提取模板匹配后目标区域，右边界根据目标区域内的蓝色和黑色像素分隔。\n\n    参数:\n    - image_path: 目标图像的文件\n    - templates: 模板图像的文件\n\n    返回:\n    - 目标区域图像（裁剪后的图像）\n    \"\"\"\n    # 转为灰度图像\n    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n\n    cropList = []\n\n    for template in tqdm(templates, desc=\"matching\", leave=False):\n\n        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)\n\n        # 执行模板匹配\n        result = cv2.matchTemplate(image_gray, template_gray, cv2.TM_CCOEFF_NORMED)\n\n        # 获取匹配结果的最大值和位置\n        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)\n\n        # 获取模板的宽度和高度\n        template_height, template_width = template.shape[:2]\n\n        # 确定目标区域的左上角坐标\n        left, top = np.array(max_loc)\n        left += template_width\n        bottom = top + template_height\n        right = left + maxWitdh if maxWitdh > 0 else image.shape[1]\n\n        # 提取目标区域图像\n        target_region = image[top:bottom, left:right]\n\n        # 转换为HSV空间，便于分离颜色\n        hsv_region = cv2.cvtColor(target_region, cv2.COLOR_BGR2HSV)\n\n        # 设定目标区域内蓝色文字的颜色范围\n        lower_blue = np.array([90, 50, 100])  # 调整下限\n        upper_blue = np.array([130, 255, 255])  # 调整上限\n\n        # 创建蓝色的掩模\n        blue_mask = cv2.inRange(hsv_region, lower_blue, upper_blue)\n\n        # 创建黑色的掩模\n        lower_black = np.array([0, 0, 0])\n        upper_black = np.array([50, 50, 50])\n        black_mask = cv2.inRange(hsv_region, lower_black, upper_black)\n\n        # cv2.imwrite(\"blue.png\", blue_mask)\n        # cv2.imwrite(\"black.png\", black_mask)\n        # cv2.imwrite(\"target.png\", target_region)\n\n        # 查找左边最右的蓝色像素\n        leftmost_blue = None\n        for x in range(blue_mask.shape[1]):\n            if np.sum(blue_mask[:, x]) > 0:  # 如果该列包含蓝色\n                leftmost_blue = x\n\n        # 查找右边最左的黑色像素\n        rightmost_black = None\n        for x in range(blue_mask.shape[1]):  # 从右往左扫描\n            if np.sum(black_mask[:, x]) > 0:  # 如果该列包含黑色\n                rightmost_black = x\n                break\n\n        # 如果找到左边最右的蓝色像素和右边最左的黑色像素，计算中点作为右边界\n        if leftmost_blue is not None and rightmost_black is not None:\n            # 计算等距平分的位置\n            right_boundary = int((leftmost_blue + rightmost_black) / 2)\n\n            # 提取目标区域图片\n            cropped_image = target_region[:, :right_boundary]  # 裁剪到右边界\n\n            cropList.append(cropped_image)  # 返回裁剪后的目标区域图像\n        else:\n            # whole line is blue font\n            cropList.append(target_region)\n    return deepcopy(cropList)\n\n\ndef match_template(image, template):\n    result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)\n    _, max_val, _, max_loc = cv2.minMaxLoc(result)\n    if max_val > 0.8:\n        return max_loc\n    return None\n\n\ndef img_crop(image, left, top, right, bottom):\n    if left < 0:\n        left = 0\n    if top < 0:\n        top = 0\n    if right > image.shape[1]:\n        right = image.shape[1]\n    if bottom > image.shape[0]:\n        bottom = image.shape[0]\n    return deepcopy(image[top:bottom, left:right])\n\n\ndef getUnkownedName():\n    with unknownLock:\n        global unknownCount\n        name = unknownPattern % unknownCount\n        unknownCount += 1\n        return name\n\n\ndef box_ocr(img):\n    with zhEngineLock:\n        return zhEngine(img, det=True, rec=False, cls=False)[0]\n\n\ndef ja_ocr(img):\n    with jaEngineLock:\n        return jaEngine(img, det=False, rec=True, cls=False)[0]\n\n\ndef zh_ocr(img):\n    with zhEngineLock:\n        return zhEngine(img, det=False, rec=True, cls=False)[0]\n\n\ndef cht_ocr(img):\n    with chtEngineLock:\n        return chtEngine(img, det=False, rec=True, cls=False)[0]\n\n\ndef box_parse(box, start_y):\n    left, top, right, bottom = (\n        int(box[0][0]),\n        int(box[0][1]),\n        int(box[2][0]),\n        int(box[2][1]),\n    )\n    if top - bottom > 90:\n        bottom = top + 90\n    box_ = [(left, top), (right, bottom)]\n\n    txt_top = start_y + box_[0][1]\n    txt_bottom = start_y + box_[1][1]\n    l_txt_left = LREIGON_LEFT + box_[0][0]\n    l_txt_right = LREIGON_LEFT + box_[1][0] + 5\n    return txt_top, txt_bottom, l_txt_left, l_txt_right\n\n\ndef find_right_boundary(image):\n    \"\"\"Find the right boundary of black text on a white background.\n\n    Args:\n        image (np.ndarray): Input image.\n\n    Returns:\n        int: The x-coordinate of the right boundary of the black text.\n    \"\"\"\n    # 將圖像從 BGR 轉換到 HSV\n    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)\n\n    # 定義黑色的 HSV 範圍\n    lower_black = np.array([0, 0, 0])\n    upper_black = np.array([180, 255, 50])\n\n    # 定義橘黃色的 HSV 範圍\n    lower_orange = np.array([10, 100, 100])\n    upper_orange = np.array([25, 255, 255])\n\n    # 創建黑色和橘黃色的掩碼\n    mask_black = cv2.inRange(hsv, lower_black, upper_black)\n    mask_orange = cv2.inRange(hsv, lower_orange, upper_orange)\n\n    # 合併掩碼\n    mask = cv2.bitwise_or(mask_black, mask_orange)\n\n    # 找到所有的非零點（黑色字體）\n    points = np.column_stack(np.where(mask > 0))\n\n    # 找到這些點的最大 x 值，即右邊界\n    right_boundary = points[:, 1].max()\n\n    # 找到這些點的最小 x 值，即左邊界\n    left_boundary = points[:, 1].min()\n\n    return left_boundary, right_boundary\n\n\ndef txtboxing(img):\n    try:\n        left, right = find_right_boundary(img)\n        left -= 5\n        right += 5\n        if left < 0:\n            left = 0\n        if right > img.shape[1]:\n            right = img.shape[1]\n        return img[:, left:right]\n    except Exception as e:\n        traceback.print_exc()\n        return img\n\n\ndef lineProcessor(lregion, mregion, rregion):\n\n    def txt_valid(txt, threshold=0.90):\n        if len(txt) > 1:\n            txt = [\n                \" \".join([(i[0]).strip() for i in txt]),\n                min([i[1] for i in txt]),\n            ]\n        return txt[0][0] if txt[0][1] > threshold else None\n\n    l_txt_region = txtboxing(lregion)\n    m_txt_region = txtboxing(mregion)\n    r_txt_region = txtboxing(rregion)\n\n    l_txt_cht = cht_ocr(l_txt_region)\n    l_txt_zh = zh_ocr(l_txt_region)\n    l_txt_ja = ja_ocr(l_txt_region)\n    l_txt = l_txt_cht\n    m_txt = ja_ocr(m_txt_region)\n    r_txt = ja_ocr(r_txt_region)\n\n    try:\n        l_txt = txt_valid(l_txt_cht)\n        if l_txt is None:\n            l_txt = txt_valid(l_txt_ja)\n        if l_txt is None:\n            l_txt = txt_valid(l_txt_zh)\n        m_txt = txt_valid(m_txt)\n        r_txt = txt_valid(r_txt)\n\n        assert l_txt is not None\n        assert m_txt is not None\n        assert r_txt is not None\n\n        wordList.append(Word(l_txt, m_txt, r_txt))\n\n    except Exception as e:\n        traceback.print_exc()\n        name = getUnkownedName()\n        # cv2.imwrite(OUTDIR / f\"{name}_l.png\", lregion)\n        # cv2.imwrite(OUTDIR / f\"{name}_m.png\", mregion)\n        # cv2.imwrite(OUTDIR / f\"{name}_r.png\", rregion)\n        cv2.imwrite(OUTDIR / f\"{name}_lt.png\", l_txt_region)\n        cv2.imwrite(OUTDIR / f\"{name}_mt.png\", m_txt_region)\n        cv2.imwrite(OUTDIR / f\"{name}_rt.png\", r_txt_region)\n\n\ndef extract_area(page):\n    img = cv2.imread(INDIR / page)\n    assert img is not None, f\"image {page} not found\"\n    header = match_template(img, headerTemplate)\n    divider = match_template(img, dividerTemplate)\n    kaiwa = match_template(img, kaiwaTemplate)\n    if divider is not None:\n        if header is None:\n            # divider front area\n            start_y = LREIGON_TOP\n            end_y = divider[1]\n            lregion_img = img_crop(img, LREIGON_LEFT, start_y, LREIGON_RIGHT, end_y)\n            cv2.imwrite(TMPDIR / \"lregine.png\", lregion_img)\n            boxes = box_ocr(lregion_img)\n            if boxes is None:\n                boxes = []\n            for box in boxes:\n                txt_top, txt_bottom, l_txt_left, l_txt_right = box_parse(box, start_y)\n                l_txt_region = img_crop(\n                    img, l_txt_left, txt_top, l_txt_right, txt_bottom\n                )\n                m_txt_region = img_crop(\n                    img, l_txt_right, txt_top, RREIGON_LEFT, txt_bottom\n                )\n                r_txt_region = img_crop(\n                    img, RREIGON_LEFT, txt_top, RREIGON_RIGHT, txt_bottom\n                )\n                lineProcessor(l_txt_region, m_txt_region, r_txt_region)\n\n        # divider bottom area\n        assert divider is not None, \"divider not found\"\n        # get y of start\n        start_y = divider[1] + dividerTemplate.shape[0] + 5\n        end_y = LREIGON_BOTTOM\n        lregion_img = img_crop(img, LREIGON_LEFT, start_y, LREIGON_RIGHT, end_y)\n        cv2.imwrite(TMPDIR / \"lregine.png\", lregion_img)\n        boxes = box_ocr(lregion_img)\n        for box in boxes:\n            txt_top, txt_bottom, l_txt_left, l_txt_right = box_parse(box, start_y)\n            l_txt_region = img_crop(img, l_txt_left, txt_top, l_txt_right, txt_bottom)\n            m_txt_region = img_crop(img, l_txt_right, txt_top, RREIGON_LEFT, txt_bottom)\n            r_txt_region = img_crop(\n                img, RREIGON_LEFT, txt_top, RREIGON_RIGHT, txt_bottom\n            )\n            lineProcessor(l_txt_region, m_txt_region, r_txt_region)\n\n    elif kaiwa is not None:\n        # ignore the bottom part of kaiwa\n        start_y = LREIGON_TOP\n        end_y = kaiwa[1]\n        lregion_img = img_crop(img, LREIGON_LEFT, start_y, LREIGON_RIGHT, end_y)\n        cv2.imwrite(TMPDIR / \"lregine.png\", lregion_img)\n        boxes = box_ocr(lregion_img)\n        for box in boxes:\n            txt_top, txt_bottom, l_txt_left, l_txt_right = box_parse(box, start_y)\n            l_txt_region = img_crop(img, l_txt_left, txt_top, l_txt_right, txt_bottom)\n            m_txt_region = img_crop(img, l_txt_right, txt_top, RREIGON_LEFT, txt_bottom)\n            r_txt_region = img_crop(\n                img, RREIGON_LEFT, txt_top, RREIGON_RIGHT, txt_bottom\n            )\n            lineProcessor(l_txt_region, m_txt_region, r_txt_region)\n    return page\n\n\nkanatukenugu = lambda area: area[-43:]\n\nif __name__ == \"__main__\":\n    import shutil\n    import os\n    import pickle\n    from multiprocessing import Lock\n    from multiprocessing.pool import ThreadPool\n\n    os.environ[\"CUDA_VISIBLE_DEVICES\"] = \"0\"\n\n    ROOT = Path(__file__).resolve().parent\n    TEMPLATEDIR = ROOT / \"xg_template\"\n    INDIR = ROOT / \"xg_in\"\n\n    TMPDIR = ROOT / \"xg_tmp\"\n    # delete file in TMPDIR\n    # shutil.rmtree(TMPDIR, ignore_errors=True)\n    TMPDIR.mkdir(exist_ok=True, parents=True)\n\n    OUTDIR = ROOT / \"xg_out\"\n    shutil.rmtree(OUTDIR, ignore_errors=True)\n    OUTDIR.mkdir(exist_ok=True, parents=True)\n\n    headerTemplate = cv2.imread(TEMPLATEDIR / \"header.png\")  # (167, 582)\n    dividerTemplate = cv2.imread(TEMPLATEDIR / \"divider.png\")  # (96, 59)\n    kaiwaTemplate = cv2.imread(TEMPLATEDIR / \"kaiwa.png\")  # (124, 217)\n\n    zhEngine = OCREngine(\"ch\")\n    zhEngineLock = Lock()\n    chtEngine = OCREngine(\"chinese_cht\")\n    chtEngineLock = Lock()\n    jaEngine = OCREngine(\"japan\")\n    jaEngineLock = Lock()\n    unknownPattern = \"unknown_%0.8d\"\n    unknownCount = 0\n    unknownLock = Lock()\n    wordList = []\n\n    # 158 261 365 1463(77*19)\n    LREIGON_LEFT = 158\n    LREIGON_TOP = 261\n    LREIGON_RIGHT = 158 + 365\n    LREIGON_BOTTOM = 261 + 1463\n    MREIGON_WIDTH = 458\n    RREIGON_LEFT = 980\n    RREIGON_RIGHT = 1390\n\n    # page = \"i-014.jpg\"  # header test\n    # page = \"i-016.jpg\"  # divider test\n    # page = \"i-017.jpg\" # kaiwa test\n    # extract_area(page)\n\n    with ThreadPool(6) as pool:\n        result = pool.imap(extract_area, os.listdir(INDIR))\n        loop = tqdm(\n            result, total=len(os.listdir(INDIR)), desc=\"processing\", leave=False\n        )\n        for _ in loop:\n            loop.set_postfix_str(f\"{_}\")\n\n\n    # use pickle to store wordList\n    with open(OUTDIR / \"data.pickle\", \"wb\") as f:\n        pickle.dump(wordList, f)\n\n    print(f\"处理完成，结果保存为：{TMPDIR}\")\n"
+        },
+        {
+          "label": "xg_data",
+          "language": "python",
+          "value": "from xg import Word\nimport pickle\nfrom pathlib import Path\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).parent\n    DATA_DIR = ROOT / \"xg_out\"\n    \n    with open(DATA_DIR / \"data.pickle\", \"rb\") as f:\n        word_list = pickle.load(f)\n    \n    wordtxt = DATA_DIR / \"words.txt\"\n    linePattern = \"%s,%s\\n\"\n    with wordtxt.open(\"w\") as f:\n        for word in word_list:\n            f.write(linePattern % (word.kanji, word.meaning))\n            f.write(linePattern % (word.hina, word.meaning))\n            \n        "
+        },
+        {
+          "label": "OCREngine",
+          "language": "python",
+          "value": "from paddleocr import PaddleOCR\n\n\nclass OCREngine:\n    def __init__(self, lang=\"japan\"):\n        self.engine = PaddleOCR(lang=lang)\n\n    def __call__(\n        self,\n        *args,\n        det=False,\n        rec=True,\n        cls=False,\n        **kwds,\n    ):\n        return self.engine.ocr(\n            *args,\n            **kwds,\n            det=det,\n            rec=rec,\n            cls=cls,\n        )\n"
+        },
+        {
+          "label": "cjs300",
+          "language": "python",
+          "value": "import fitz  # PyMuPDF\nimport cv2\nimport numpy as np\nfrom tqdm import tqdm\nfrom pathlib import Path\nfrom copy import deepcopy\nfrom OCREngine import OCREngine\n\n\n# 第一步：将 PDF 转换为图片\ndef pdf_to_image(\n    pdf_path,\n    page=-1,\n    outDir=None,\n    dpi=300,\n):\n    pdf_document = fitz.open(pdf_path)\n    pageList = {}\n    namePattern = \"page_%0\" + str(np.ceil(np.log10(len(pdf_document)))) + \"d.png\"\n    if page <= 0:  # return all pages\n        for idx, page in enumerate(tqdm(pdf_document, desc=\"pdf process\", leave=False)):\n            pageList[idx] = page.get_pixmap(dpi=dpi)\n    else:\n        idx = page - 1\n        assert isinstance(page, int) and page < len(\n            pdf_document\n        ), f\"Invalid page number, specified page should between 1 and {len(pdf_document)}\"\n        page = pdf_document[idx]  # 获取第一页\n        pageList[idx] = page.get_pixmap(dpi=dpi)\n    if outDir is not None:\n        for idx, page in tqdm(pageList.items(), desc=\"save image file\", leave=False):\n            image_path = outDir / (namePattern % (idx + 1))\n            page.save(image_path)\n    return pageList\n\n\ndef extract_target_region(image, templates, maxWitdh=-1, cutKana=False):\n    \"\"\"\n    从图像中提取模板匹配后目标区域，右边界根据目标区域内的蓝色和黑色像素分隔。\n\n    参数:\n    - image_path: 目标图像的文件\n    - templates: 模板图像的文件\n\n    返回:\n    - 目标区域图像（裁剪后的图像）\n    \"\"\"\n    # 转为灰度图像\n    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n\n    cropList = []\n\n    for template in tqdm(templates, desc=\"matching\", leave=False):\n\n        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)\n\n        # 执行模板匹配\n        result = cv2.matchTemplate(image_gray, template_gray, cv2.TM_CCOEFF_NORMED)\n\n        # 获取匹配结果的最大值和位置\n        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)\n\n        # 获取模板的宽度和高度\n        template_height, template_width = template.shape[:2]\n\n        # 确定目标区域的左上角坐标\n        left, top = np.array(max_loc)\n        left += template_width\n        bottom = top + template_height\n        right = left + maxWitdh if maxWitdh > 0 else image.shape[1]\n\n        # 提取目标区域图像\n        target_region = image[top:bottom, left:right]\n\n        # 转换为HSV空间，便于分离颜色\n        hsv_region = cv2.cvtColor(target_region, cv2.COLOR_BGR2HSV)\n\n        # 设定目标区域内蓝色文字的颜色范围\n        lower_blue = np.array([90, 50, 100])  # 调整下限\n        upper_blue = np.array([130, 255, 255])  # 调整上限\n\n        # 创建蓝色的掩模\n        blue_mask = cv2.inRange(hsv_region, lower_blue, upper_blue)\n\n        # 创建黑色的掩模\n        lower_black = np.array([0, 0, 0])\n        upper_black = np.array([50, 50, 50])\n        black_mask = cv2.inRange(hsv_region, lower_black, upper_black)\n\n        # cv2.imwrite(\"blue.png\", blue_mask)\n        # cv2.imwrite(\"black.png\", black_mask)\n        # cv2.imwrite(\"target.png\", target_region)\n\n        # 查找左边最右的蓝色像素\n        leftmost_blue = None\n        for x in range(blue_mask.shape[1]):\n            if np.sum(blue_mask[:, x]) > 0:  # 如果该列包含蓝色\n                leftmost_blue = x\n\n        # 查找右边最左的黑色像素\n        rightmost_black = None\n        for x in range(blue_mask.shape[1]):  # 从右往左扫描\n            if np.sum(black_mask[:, x]) > 0:  # 如果该列包含黑色\n                rightmost_black = x\n                break\n\n        # 如果找到左边最右的蓝色像素和右边最左的黑色像素，计算中点作为右边界\n        if leftmost_blue is not None and rightmost_black is not None:\n            # 计算等距平分的位置\n            right_boundary = int((leftmost_blue + rightmost_black) / 2)\n\n            # 提取目标区域图片\n            cropped_image = target_region[:, :right_boundary]  # 裁剪到右边界\n\n            cropList.append(cropped_image)  # 返回裁剪后的目标区域图像\n        else:\n            # whole line is blue font\n            cropList.append(target_region)\n    return deepcopy(cropList)\n\n\ndef match_template(image, template):\n    result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)\n    _, max_val, _, max_loc = cv2.minMaxLoc(result)\n    if max_val > 0.8:\n        return max_loc\n    return None\n\n\ndef get_area(image, left_top_template, right_top_template, bottom_template):\n    \"\"\"Summary\n    divide image into 3 areas: left_top, right_top, bottom by template matching;\n    left_top area is between left_top_template, width is the same as left_top_template;\n    right_top area is between right_top_template and upper border of bottom_template, width is the same as right_top_template;\n    bottom area is below lower border of bottom_template, width is the same as left_top_template;\n\n    Args:\n        image (_type_): image to be divided\n        left_top_template (_type_): left top template\n        right_top_template (_type_): right top template\n        bottom_template (_type_): bottom template\n\n    Returns:\n        list of 3 areas box (x, y, w, h)\n    \"\"\"\n\n    left_top_loc = match_template(image, left_top_template)\n    right_top_loc = match_template(image, right_top_template)\n    bottom_loc = match_template(image, bottom_template)\n\n    left_top_x, left_top_y = left_top_loc\n    right_top_x, right_top_y = right_top_loc\n    bottom_x, bottom_y = bottom_loc\n\n    left_top_w, left_top_h = left_top_template.shape[1], left_top_template.shape[0]\n    right_top_w, right_top_h = right_top_template.shape[1], right_top_template.shape[0]\n    bottom_w, bottom_h = bottom_template.shape[1], bottom_template.shape[0]\n\n    left_top_area = (\n        left_top_x,\n        left_top_y + left_top_h,\n        left_top_w,\n        bottom_y - (left_top_y + left_top_h),\n    )\n    right_top_area = (\n        right_top_x,\n        right_top_y + right_top_h,\n        right_top_w,\n        bottom_y - (right_top_y + right_top_h),\n    )\n    bottom_area = (\n        bottom_x,\n        bottom_y + bottom_h,\n        bottom_w,\n        image.shape[0] - (bottom_y + bottom_h) - 130,\n    )\n\n    # return [left_top_area, right_top_area, bottom_area]\n\n    left_top_img = image[\n        left_top_area[1] : left_top_area[1] + left_top_area[3],\n        left_top_area[0] : left_top_area[0] + left_top_area[2],\n    ]\n    right_top_img = image[\n        right_top_area[1] : right_top_area[1] + right_top_area[3],\n        right_top_area[0] : right_top_area[0] + right_top_area[2],\n    ]\n    bottom_img = image[\n        bottom_area[1] : bottom_area[1] + bottom_area[3],\n        bottom_area[0] : bottom_area[0] + bottom_area[2],\n    ]\n\n    return deepcopy([left_top_img, right_top_img, bottom_img])\n\n\nkanatukenugu = lambda area: area[-43:]\n\nif __name__ == \"__main__\":\n    import shutil\n\n    ROOT = Path(__file__).resolve().parent\n    TEMPLATEDIR = ROOT / \"cjs300_template\"\n    DPI = 300\n    pdf_path = ROOT / \"cjs300.pdf\"\n\n    TMPDIR = ROOT / \"cjs300_tmp\"\n    # delete file in TMPDIR\n    shutil.rmtree(TMPDIR, ignore_errors=True)\n    TMPDIR.mkdir(exist_ok=True, parents=True)\n\n    OUTDIR = ROOT / \"cjs300_out\"\n    shutil.rmtree(OUTDIR, ignore_errors=True)\n    OUTDIR.mkdir(exist_ok=True, parents=True)\n    \n\n    engine = OCREngine(\"japan\")\n    mainWordList = []\n    additionalWordList = []\n    WordList = []\n    notSureCount = 0\n    notSurePattern = \"ns_%016d.png\"\n    notSureCount_a = 0\n    notSurePattern_a = \"nsa_%016d.png\"\n\n    page = -1\n    image_path = pdf_to_image(\n        pdf_path, page=page, outDir=TMPDIR, dpi=DPI\n    )  # 将 PDF 转换为图片\n\n    # 加载模板\n    wordTemplates = []\n    templateNamePattern = \"order_%d.png\"\n\n    for i in tqdm(range(1, 16), desc=\"load template\", leave=False):\n        wordTemplates.append(\n            cv2.imread(TEMPLATEDIR / (templateNamePattern % i))\n        )  # 模板图像\n\n    # 加载图像 -> ocr\n    imgSuffix = [\".png\", \".jpg\", \".jpeg\", \".bmp\"]\n    for img in tqdm(list(TMPDIR.iterdir()), desc=\"ocr\", leave=True):\n        if img.suffix.lower() not in imgSuffix:\n            continue\n        image = cv2.imread(img)  # 目标图像\n\n        left_top_template = cv2.imread(TEMPLATEDIR / \"word.png\")\n        right_top_template = cv2.imread(TEMPLATEDIR / \"conver.png\")\n        bottom_template = cv2.imread(TEMPLATEDIR / \"addon.png\")\n\n        [left_top_img, right_top_img, bottom_img] = get_area(\n            image, left_top_template, right_top_template, bottom_template\n        )\n\n        try:\n            wordAreas = extract_target_region(\n                left_top_img,\n                wordTemplates,\n                cutKana=False,\n            )\n            wordAreas = [kanatukenugu(i) for i in wordAreas]\n            results = engine(wordAreas)[0]\n            for idx, (result, score) in enumerate(results):\n                if score < 0.8:\n                    area = cv2.cvtColor(wordAreas[idx], cv2.COLOR_BGR2GRAY)\n                    _, area = cv2.threshold(area, 200, 255, cv2.THRESH_BINARY)\n                    area = cv2.cvtColor(area, cv2.COLOR_GRAY2BGR)\n\n                    cv2.imwrite(OUTDIR / (notSurePattern%notSureCount), area)\n                    notSureCount += 1\n                else:\n                    mainWordList.append(result)\n                    WordList.append(result)\n        except:\n            import traceback\n            traceback.print_exc()\n\n        try:\n            addonAreas = extract_target_region(\n                bottom_img,\n                wordTemplates[:10],\n                maxWitdh=705,\n                cutKana=False\n            )\n            \n            addonAreas = [kanatukenugu(i) for i in addonAreas]\n\n            results = engine(addonAreas)[0]\n            for idx, (result, score) in enumerate(results):\n                if score < 0.8:\n                    area = cv2.cvtColor(addonAreas[idx], cv2.COLOR_BGR2GRAY)\n                    _, area = cv2.threshold(area, 200, 255, cv2.THRESH_BINARY)\n                    area = cv2.cvtColor(area, cv2.COLOR_GRAY2BGR)\n                \n                    cv2.imwrite(OUTDIR / (notSurePattern_a%notSureCount_a), area)\n                    notSureCount_a += 1\n                else:\n                    additionalWordList.append(result)\n                    WordList.append(result)\n        except:\n            import traceback\n            traceback.print_exc()\n        # pass\n    \n    # write world list to txt file\n    with open(OUTDIR / \"mainWordList.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(\"\\n\".join(mainWordList))\n    with open(OUTDIR / \"additionalWordList.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(\"\\n\".join(additionalWordList))\n    with open(OUTDIR / \"WordList.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(\"\\n\".join(WordList))\n    \n    \n    print(f\"处理完成，结果保存为：{TMPDIR}\")\n"
+        },
+        {
+          "label": "zn",
+          "language": "python",
+          "value": "import cv2\nimport os\nfrom pathlib import Path\nimport shutil\nimport numpy as np\nfrom copy import deepcopy\nfrom traceback import print_exc\nfrom tqdm import tqdm\nfrom pprint import pprint\n\n\ndef calc_contours(gray, cvt=cv2.COLOR_BGR2GRAY):\n    \"\"\"\n    计算图像中的轮廓。\n\n    参数:\n    gray (numpy.array): 输入的图像。\n\n    返回:\n    list: 图像中检测到的轮廓列表。\n    \"\"\"\n    # 将输入图像转换为灰度图像\n    if len(gray.shape) == 3:\n        gray = cv2.cvtColor(gray, cvt)\n    # _, thresh = cv2.threshold(gray, 245, 255, cv2.THRESH_BINARY_INV)\n    # cv2.imwrite(str(TMP_DIR / \"thresh.jpg\"), thresh)\n    # # 添加形态学闭运算以连接细长且垂直的矩形\n    # kernel_x = np.ones((3, 1), np.uint8)\n    # kernel_y = np.ones((1, 3), np.uint8)\n    # closed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel_x, iterations=2)\n    # closed = cv2.morphologyEx(closed, cv2.MORPH_CLOSE, kernel_y, iterations=2)\n    # cv2.imwrite(str(TMP_DIR / \"closed.jpg\"), closed)  # 保存闭运算后的图像\n\n    # 高斯模糊去噪\n    blurred = cv2.GaussianBlur(gray, (5, 5), 0)\n    # cv2.imwrite(str(TMP_DIR / \"blurred.jpg\"), blurred)\n\n    # 二值化处理\n    _, binary = cv2.threshold(blurred, 245, 255, cv2.THRESH_BINARY_INV)\n    # cv2.imwrite(str(TMP_DIR / \"binary.jpg\"), binary)\n\n    # 添加开运算以去除噪声\n    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))\n    opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=1)\n    # cv2.imwrite(str(TMP_DIR / \"opening.jpg\"), opening)  # 保存开运算后的图像\n\n    # 膨胀操作\n    dilation = cv2.dilate(opening, kernel, iterations=2)\n\n    # 腐蚀操作\n    erosion = cv2.erode(dilation, kernel, iterations=2)\n    # cv2.imwrite(str(TMP_DIR / \"new_handled.jpg\"), erosion)  # 保存闭运算后的图像\n\n    # 查找轮廓\n    contours, _ = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\n\n    return contours, erosion\n\n\ndef expand_box(box, padding=5):\n    \"\"\"\n    扩展边界框的大小。\n\n    参数:\n    box (tuple): 原始边界框坐标 (x, y, w, h)。\n    padding (int): 边界框扩展的像素值，默认为5。\n\n    返回:\n    tuple: 扩展后的边界框坐标 (x, y, w, h)。\n    \"\"\"\n    x, y, w, h = box\n    x -= padding\n    y -= padding\n    w += 2 * padding\n    h += 2 * padding\n    return (x, y, w, h)\n\n\ndef calculate_min_area_rect(contour):\n    \"\"\"\n    计算轮廓的最小外接矩形。\n\n    参数:\n    contour (numpy.array): 轮廓点的数组。\n\n    返回:\n    tuple: 最小外接矩形的顶点坐标 (box)、矩形参数 (rect) 和边界框坐标 (xywh)。\n    \"\"\"\n    rect = cv2.minAreaRect(contour)\n    box = cv2.boxPoints(rect)\n    box = np.int0(box)\n    x, y, w, h = cv2.boundingRect(contour)\n    xywh = (x, y, w, h)\n    return box, rect, xywh\n\n\ndef crop_box_region(img, box):\n    \"\"\"\n    裁剪图像中的指定边界框区域。\n\n    参数:\n    img (numpy.array): 原始图像。\n    box (tuple): 边界框坐标 (x, y, w, h)。\n\n    返回:\n    numpy.array: 裁剪后的图像区域。\n    \"\"\"\n    x, y, w, h = box\n    cropped_img = img[y : y + h, x : x + w].copy()\n    return cropped_img\n\n\ndef crop_and_extract_main_color(img, top_height=None):\n    \"\"\"\n    剪切图片顶部指定高度的区域并提取返回主要颜色。\n\n    参数:\n    img (numpy.array): 原始图像。\n    top_height (int): 剪切的顶部高度，默认为50像素。\n\n    返回:\n    tuple: 主要颜色的RGB值。\n    \"\"\"\n    if top_height:\n        image = img[:top_height].copy()\n    else:\n        image = img\n    # 判断图像是否为灰度图像\n    if len(image.shape) == 2:\n        # 灰度图像\n        hist = cv2.calcHist([image], [0], None, [256], [0, 256])\n        main_color_gray = np.argmax(hist)\n        return np.array([main_color_gray], dtype=np.uint8)\n    else:\n        # 彩色图像\n        return np.array(\n            [\n                crop_and_extract_main_color(image[:, :, i])\n                for i in range(image.shape[2])\n            ],\n            dtype=np.uint8,\n        ).reshape(-1)\n\n\ndef compare_colors(color1, color2, threshold=30):\n    \"\"\"\n    比较两个颜色是否相同。\n\n    参数:\n    color1 (tuple): 第一个颜色的RGB值。\n    color2 (tuple): 第二个颜色的RGB值。\n    threshold (int): 颜色比较的阈值，默认为30。\n\n    返回:\n    bool: 如果颜色相同返回True，否则返回False。\n    \"\"\"\n    distance = np.linalg.norm(np.array(color1) - np.array(color2))\n    return distance < threshold\n\n\ndef color_index(color_list, color, threshold=30):\n    \"\"\"\n    将颜色添加到列表中，如果颜色不同则插入新颜色。\n\n    参数:\n    color_list (list): 颜色列表。\n    color (tuple): 待比较的颜色。\n    threshold (int): 颜色比较的阈值，默认为30。\n\n    返回:\n    int: 相同颜色的索引。\n    \"\"\"\n    for index, existing_color in enumerate(color_list):\n        if compare_colors(existing_color, color, threshold):\n            return index\n    return -1\n\n\ndef calc_rect_area(contours, draw_img=None, draw=False):\n    # 筛选出符合固定高度但宽度可变的非矩形外框\n    fixed_height = 80  # 假设固定高度为30像素\n    tolerance = 20  # 容差范围\n\n    filtered_contours = []\n    for contour in contours:\n        x, y, w, h = cv2.boundingRect(contour)\n        if abs(h - fixed_height) <= tolerance:\n            filtered_contours.append(contour)\n\n    # 使用近似多边形来检测非矩形外框\n    detected_boxes = []\n    for contour in filtered_contours:\n        epsilon = 0.02 * cv2.arcLength(contour, True)\n        approx = cv2.approxPolyDP(contour, epsilon, True)\n\n        # 检查近似多边形是否为非矩形\n        if len(approx) == 4:\n            x, y, w, h = cv2.boundingRect(contour)\n            _, _, xywh = calculate_min_area_rect(contour)\n            detected_boxes.append((*xywh, approx))\n\n    # # 绘制检测到的非矩形外框\n    box_image = draw_img.copy()\n    for box in detected_boxes:\n        x, y, w, h, approx = box\n        cv2.rectangle(box_image, (x, y), (x + w, y + h), (0, 0, 255), 2)\n\n    return detected_boxes\n\n\ndef box_classification(img, x, y, w, h, box_type_threshold=150 * 3):\n    crop_img = crop_box_region(img, (x, y, w, h))\n    box_main_color = crop_and_extract_main_color(crop_img)\n    # print(f\"box主要颜色的RGB值: {box_main_color}\")\n    # print(box_main_color.sum() >= box_type_threshold)\n    return box_main_color.sum() >= box_type_threshold * sum(box_main_color.shape)\n\n\ndef img_handling(image, output_dir):\n\n    contours, handled_pic = calc_contours(image)\n    detected_boxes = calc_rect_area(contours, draw_img=image, draw=True)\n\n    #     # 调用新封装的函数\n    main_color = crop_and_extract_main_color(image, 50)\n    # print(f\"主要颜色的RGB值: {main_color}\")\n\n    # 将颜色添加到列表中，并获取相同颜色的索引\n    theme = color_index(THEMES, main_color)\n    if theme == -1:\n        THEMES.append(main_color)\n        theme += len(THEMES)\n        THEME_COUNT[str(theme)] = 0\n    # print(f\"颜色索引: {theme}\")\n\n    # 腐蚀操作\n    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))\n    erosion = cv2.erode(handled_pic, kernel, iterations=2)\n\n    # cv2.imwrite(str(output_dir / \"box_eroded_image.jpg\"), erosion)\n    for box in detected_boxes:\n        try:\n            box_type = int(\n                box_classification(erosion, *box[:4], box_type_threshold=150)\n            )\n            area_a = crop_box_region(image, box[:4])\n            box_b = [*box[:4]]\n            box_b_shape = BOX_SHAPE[box_type]\n            box_b[1] += box_b[3] + box_b_shape[0]\n            box_b[3] = box_b_shape[1]\n            area_b = crop_box_region(image, box_b)\n            cv2.imwrite(\n                str(\n                    output_dir\n                    / (BOX_NAME_PATTERN % (theme, THEME_COUNT[str(theme)], \"a\"))\n                ),\n                area_a,\n            )\n            cv2.imwrite(\n                str(\n                    output_dir\n                    / (BOX_NAME_PATTERN % (theme, THEME_COUNT[str(theme)], \"b\"))\n                ),\n                area_b,\n            )\n            THEME_COUNT[str(theme)] += 1\n        except Exception as e:\n            print_exc()\n            raise (e)\n\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).resolve().parent\n    IN_DIR = ROOT / \"zn_in\"\n    OUT_DIR = ROOT / \"zn_out\"\n    TMP_DIR = ROOT / \"zn_tmp\"\n\n    shutil.rmtree(TMP_DIR, ignore_errors=True)\n    shutil.rmtree(OUT_DIR, ignore_errors=True)\n    TMP_DIR.mkdir(exist_ok=True, parents=True)\n    OUT_DIR.mkdir(exist_ok=True, parents=True)\n    THEMES = []\n    THEME_COUNT = {}\n    EXP_COUNT = 0\n\n    # box_type:\n    # 0: offset=4, height=85\n    # 1: offset=4, height=90\n    BOX_SHAPE = {\n        0: (4, 85),\n        1: (4, 90),\n    }\n    BOX_NAME_PATTERN = (\n        \"%s_%0.8d_%s.png\"  # \"{THEME}_{THEME_COUNT[str(theme)]}_{[a|b]}.png\"\n    )\n\n    loop = tqdm(sorted(os.listdir(IN_DIR)))\n    for img in loop:\n        # image = cv2.imread(str(IN_DIR / \"i-034.jpg\"))\n        image = cv2.imread(str(IN_DIR / img))\n        try:\n            img_handling(image, OUT_DIR)\n        except Exception as e:\n            print_exc()\n            cv2.imwrite(str(TMP_DIR / img), image)\n            EXP_COUNT += 1\n        finally:\n            loop.set_postfix(\n                {\n                    \"processed\": img,\n                    \"错误图片数量\": EXP_COUNT,\n                    **THEME_COUNT,\n                }\n            )\n    pprint(\"处理完成，错误图片数量: %d\" % EXP_COUNT)\n    pprint(THEME_COUNT)\n"
+        },
+        {
+          "label": "zn_anki",
+          "language": "python",
+          "value": "# anki 批量制卡\nimport genanki\nimport os\nfrom pathlib import Path\nfrom tqdm import tqdm\n\nif __name__ == \"__main__\":\n    # 创建一个模型\n    model_id = 1607392319\n    model = genanki.Model(\n        model_id,\n        \"Picture Card\",\n        fields=[\n            {\"name\": \"FrontImage\"},\n            {\"name\": \"BackImage\"},\n        ],\n        templates=[\n            {\n                \"name\": \"Card 1\",\n                \"qfmt\": '<img src=\"{{FrontImage}}\">',\n                \"afmt\": '<img src=\"{{BackImage}}\">',\n            },\n        ],\n    )\n\n    # 创建一个牌组\n    deck_id = 2059400110\n    deck = genanki.Deck(deck_id, \"Picture Cards\")\n\n    ROOT = Path(__file__).resolve().parent\n\n    # 图片文件夹路径\n    IMG_DIR = ROOT / \"zn_out\"  # 根据实际情况调整路径\n\n    media_files = []\n\n    # 遍历文件夹中的图片\n    loop = tqdm(sorted(IMG_DIR.glob(\"*.png\")))\n    for img in loop:\n        img_name = img.stem\n        parts = img_name.split(\"_\")\n        if len(parts) == 3:\n            theme, theme_count, side = parts\n            if side in [\"a\", \"b\"]:\n                front_image_path = str(f\"{theme}_{theme_count}_a.png\")\n                back_image_path = str(f\"{theme}_{theme_count}_b.png\")\n                # if os.path.exists(front_image_path) and os.path.exists(back_image_path):\n                media_files.append(str(IMG_DIR / front_image_path))\n                media_files.append(str(IMG_DIR / back_image_path))\n                note = genanki.Note(\n                    model=model, fields=[front_image_path, back_image_path]\n                )\n                deck.add_note(note)\n            loop.set_postfix({\"processed\": img.stem})\n\n    # 生成APKG文件\n    genanki.Package(deck, media_files).write_to_file(ROOT / \"zn_cards.apkg\")\n"
+        }
+      ],
+      "id": "NFUu-RrP",
+      "createdAt": 1737212114180,
+      "updatedAt": 1737212779760
     }
   ],
   "tags": [
