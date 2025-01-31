@@ -2066,6 +2066,24 @@
       "id": "dcxnfzbc",
       "createdAt": 1737547326530,
       "updatedAt": 1737547439135
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "mdpwqphi",
+      "tagsIds": [],
+      "description": null,
+      "name": "password",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "mysql",
+          "value": "-- method 1:\nSET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456');\t--设置登录密码为123456\nflush privileges;\n\n-- 在 MySQL 8.0 及更高版本中，PASSWORD() 函数已被移除，因此无法使用 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root'); 这样的语法来设置密码。\nALTER USER 'root'@'localhost' IDENTIFIED BY 'root';\nflush privileges;"
+        }
+      ],
+      "id": "GPOvbUlL",
+      "createdAt": 1737975326758,
+      "updatedAt": 1737975377827
     }
   ],
   "tags": [
