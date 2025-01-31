@@ -657,11 +657,16 @@
           "label": "子片段 1",
           "language": "python",
           "value": "# coding=utf-8\nfrom progress.bar import Bar\nimport time\n\n# 创建Bar类的实例\nbar = Bar('MyProcess:', max=100)\n# 循环处理某业务，调用bar对象的next()方法，循环次数等于max\nfor _ in range(100):\n # Do some work\n    time.sleep(0.05)\n    bar.next()\n# 循环完成后调用finish()方法\nbar.finish()\n\n\nwith Bar('Processing', max=20) as bar:\n    for i in range(20):\n        time.sleep(0.05)\n        bar.next()\n        \nfor i in Bar(\n    \t\tf\"{image_set}{year}\", bar_prefix=\" [\", bar_suffix=\"] \", fill=\">\"\n    ).iter(range(100)):\n    time.sleep(0.05)"
+        },
+        {
+          "label": "sys.out/sys.flush",
+          "language": "python",
+          "value": "sys.stdout.write(f\"\\rLength: {length}\")  # 使用sys.stdout.write和sys.stdout.flush来更新长度\nsys.stdout.flush()"
         }
       ],
       "id": "54MBrGJN",
       "createdAt": 1709098599140,
-      "updatedAt": 1709989377044
+      "updatedAt": 1738335905954
     },
     {
       "isDeleted": false,
