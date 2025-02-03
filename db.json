@@ -2089,6 +2089,47 @@
       "id": "GPOvbUlL",
       "createdAt": 1737975326758,
       "updatedAt": 1737975377827
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "Mongodb",
+      "content": [
+        {
+          "label": "MongoEngine",
+          "language": "python",
+          "value": "from mongoengine import (\n    Document,\n    StringField,\n    IntField,\n    FloatField,\n    DateTimeField,\n    connect,\n)\n\nfrom datetime import datetime\nimport traceback\nimport sys  # 添加导入sys模块\n\n# from MongoTables import KLine\nfrom tqdm import tqdm\n\n\nclass DBEngine:\n    __DBTABLES__ = {}\n\n    def __init__(\n        self,\n        ip=\"127.0.0.1\",\n        port=27017,\n        user=\"root\",\n        password=\"root\",\n        db=\"binance\",\n    ):\n\n        # 连接到 MongoDB 数据库\n        self.connect = connect(\n            db,\n            host=ip,\n            port=port,\n            username=user,\n            password=password,\n            maxPoolSize=32,\n        )\n        # 连接已经通过 connect 函数完成\n\n        # 创建索引\n        for table in self.__DBTABLES__.values():\n            table.ensure_indexes()\n\n    def insertKLine(self, kline):\n        # 检查是否存在相同的 (stock_name, open_time, interval)\n        existing_kline = (\n            DBEngine.__DBTABLES__[\"KLine\"]\n            .objects(\n                stock_name=kline.stock_name,\n                open_time=kline.open_time,\n                interval=kline.interval,\n            )\n            .first()\n        )\n\n        if existing_kline:\n            print(\n                f\"KLine for {kline.stock_name} at {kline.open_time} with interval {kline.interval} already exists.\"\n            )\n            return False\n\n        # 插入新数据\n        try:\n            kline.save()\n            print(\n                f\"KLine for {kline.stock_name} at {kline.open_time} with interval {kline.interval} inserted successfully.\"\n            )\n            return True\n        except Exception as e:\n            traceback.print_exc()\n            return False\n\n    def insertKLineList(self, kline_list: list):\n        try:\n            DBEngine.__DBTABLES__[\"KLine\"].objects.insert(kline_list)\n        except Exception as e:\n            traceback.print_exc()\n\n    def queryExistsByNameAndTime(self, stock_name, open_time, interval):\n        existing_kline = (\n            DBEngine.__DBTABLES__[\"KLine\"]\n            .objects(stock_name=stock_name, open_time=open_time, interval=interval)\n            .first()\n        )\n        return existing_kline is not None\n\n    def getMaxOpenTime(self, stock_name, interval):\n        max_open_time = (\n            DBEngine.__DBTABLES__[\"KLine\"]\n            .objects(stock_name=stock_name, interval=interval)\n            .order_by(\"-open_time\")  # \"-\" means descending\n            .first()\n        )\n\n        return max_open_time.open_time if max_open_time else None\n\n    def check_continuous(self, stock_name, interval, o_time=None):\n        # 查询出指定 stock_name 和 interval 的所有 open_time\n        klines = (\n            DBEngine.__DBTABLES__[\"KLine\"]\n            .objects(stock_name=stock_name, interval=interval)\n            .only(\"open_time\")\n            .order_by(\"open_time\")\n        )\n        interval_ms = interval * 1000\n\n        if not klines:\n            return []\n\n        # missing_intervals = []\n        current_time = o_time\n        expected_time = current_time\n\n        for kline in tqdm(klines, desc=\"Checking missing intervals\"):\n            open_time = kline.open_time\n            if current_time is None:\n                current_time = open_time\n            elif open_time > expected_time:\n                # 找到缺失的时间点\n                missing_start = expected_time\n                missing_count = (open_time - expected_time) // interval_ms\n                # missing_intervals.append((missing_start, int(missing_count)))            \n                # 使用 yield 逐批返回缺失的时间间隔\n                yield (missing_start, int(missing_count))\n            expected_time = open_time + interval_ms\n\n        # return missing_intervals\n\n    def getLength(self, stock_name, interval, batch_size=1024 * 16):\n        # 使用聚合框架优化 count 操作\n        # pipeline = [\n        #     {\"$match\": {\"stock_name\": stock_name, \"interval\": interval}},\n        #     {\"$count\": \"length\"},\n        # ]\n        # result = list(DBEngine.__DBTABLES__[\"KLine\"].objects.aggregate(pipeline))\n        # return result[0][\"length\"] if result else 0\n\n        batch_size = 10000\n        cursor = (\n            DBEngine.__DBTABLES__[\"KLine\"]\n            .objects(stock_name=stock_name, interval=interval)\n            .limit(batch_size)\n        )\n\n        length = 0\n        while cursor:\n            batch = list(cursor)\n            if len(batch) < batch_size:\n                length += len(batch)\n                break\n            else:\n                length += batch_size\n                sys.stdout.write(\n                    f\"\\rLength: {length}\"\n                )  # 使用sys.stdout.write和sys.stdout.flush来更新长度\n                sys.stdout.flush()\n        return length\n\n    @classmethod\n    def register_table(cls, table_class):\n        if table_class.__name__ not in cls.__DBTABLES__:\n            # cls.__DBTABLES__.append(table_class)\n            cls.__DBTABLES__[table_class.__name__] = table_class\n        else:\n            raise Exception(\n                f\"Table {table_class.__name__} has already been registered as: \"\n                + cls.__DBTABLES__[table_class.__name__]\n            )\n        return table_class\n\n\n# 定义文档类\n@DBEngine.register_table\nclass KLine(Document):\n    stock_name = StringField(required=True)\n    open_time = IntField(required=True)\n    interval = IntField(required=True)\n    open_price = FloatField(required=True)\n    high_price = FloatField(required=True)\n    low_price = FloatField(required=True)\n    close_price = FloatField(required=True)\n    volume = FloatField(required=True)\n    close_time = IntField(required=True)\n    quote_asset_volume = FloatField(required=True)\n    number_of_trades = IntField(required=True)\n    taker_buy_base_asset_volume = FloatField(required=True)\n    taker_buy_quote_asset_volume = FloatField(required=True)\n\n    meta = {\n        \"indexes\": [\n            (\"stock_name\", \"open_time\", \"interval\"),\n            (\"interval\", \"stock_name\", \"open_time\"),\n        ]\n    }\n\n\nif __name__ == \"__main__\":\n    from utils import convert_to_seconds\n\n    # db = DBEngine(ip=\"10.68.34.200\")\n    interval = convert_to_seconds(\"1h\")\n    db = DBEngine(ip=\"192.168.101.14\")\n    print(db.getMaxOpenTime(\"BTCUSDT\", 1))\n    print(db.getLength(\"BTCUSDT\", interval))\n    missing_intervals = db.check_continuous(\"BTCUSDT\", 1)\n    pass\n"
+        },
+        {
+          "label": "Fragment 2",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "qijWW0-B",
+      "createdAt": 1738504214297,
+      "updatedAt": 1738504232041
+    },
+    {
+      "isDeleted": true,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "numpy",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "JreokbdZ",
+      "createdAt": 1738552792353,
+      "updatedAt": 1738552807237
     }
   ],
   "tags": [
