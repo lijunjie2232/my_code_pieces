@@ -2011,12 +2011,12 @@
         {
           "label": "Fragment 1",
           "language": "python",
-          "value": ""
+          "value": "git "
         }
       ],
       "id": "QMfhY94W",
       "createdAt": 1737451772925,
-      "updatedAt": 1737451776605
+      "updatedAt": 1738552866113
     },
     {
       "isDeleted": false,
@@ -2130,6 +2130,29 @@
       "id": "JreokbdZ",
       "createdAt": 1738552792353,
       "updatedAt": 1738552807237
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "numpy",
+      "content": [
+        {
+          "label": "取整",
+          "language": "python",
+          "value": "向上取整：使用 numpy.ceil() 函数。\n向下取整：使用 numpy.floor() 函数。\n四舍五入：使用 numpy.round() 函数。"
+        },
+        {
+          "label": "Fragment 2",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "Yc12Pbu8",
+      "createdAt": 1738552904866,
+      "updatedAt": 1738552923147
     }
   ],
   "tags": [
