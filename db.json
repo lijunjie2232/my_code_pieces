@@ -2239,14 +2239,14 @@
           "value": "\nclass YouDaoWord:\n    \"\"\"\n    <wordbook>\n        <item>\n            <word>This is a Test这是单词 或者 句子</word>\n            <trans><![CDATA[这是解释]]></trans>\n            <phonetic><![CDATA[这是音标]]></phonetic>\n            <tags>这是分类</tags>\n            <progress>0</progress>\n        </item>\n    </wordbook>\n    \"\"\"\n    def __init__(self, word, trans=\"\", phonetic=\"\", tags=\"\", progress=0):\n        self.word = word\n        self.trans = trans\n        self.phonetic = phonetic\n        self.tags = tags\n        self.progress = progress\n    \n    def __str__(self):\n        return f\"<item>\\n\\t<word>{self.word}</word>\\n\\t<trans><![CDATA[{self.trans}]]></trans>\\n\\t<phonetic><![CDATA[{self.phonetic}]]></phonetic>\\n\\t<tags>{self.tags}</tags>\\n\\t<progress>{self.progress}</progress>\\n</item>\"\n\n    def as_node(self):\n        # 创建 <item> 元素\n        item = ET.Element(\"item\")\n        \n        # 创建并添加 <word> 元素\n        word = ET.SubElement(item, \"word\")\n        word.text = self.word\n        \n        # 创建并添加 <trans> 元素\n        trans = ET.SubElement(item, \"trans\")\n        trans.text = f\"<![CDATA[{self.trans}]]>\"\n        \n        # 创建并添加 <phonetic> 元素\n        phonetic = ET.SubElement(item, \"phonetic\")\n        phonetic.text = f\"<![CDATA[{self.phonetic}]]>\"\n        \n        # 创建并添加 <tags> 元素\n        tags = ET.SubElement(item, \"tags\")\n        tags.text = self.tags\n        \n        # 创建并添加 <progress> 元素\n        progress = ET.SubElement(item, \"progress\")\n        progress.text = self.progress\n        \n        return item\n    \n    def __repr__(self):\n        return self.__str__()"
         },
         {
-          "label": "Fragment 2",
+          "label": "XML",
           "language": "python",
-          "value": ""
+          "value": "class YouDaoXML:\n    def __init__(self, words=[]):\n        self.words = words\n    \n    def add_word(self, word):\n        \"\"\"\n        添加一个单词到单词列表中。\n        \"\"\"\n        self.words.append(word)\n\n    def as_xml(self):\n        \"\"\"\n        返回包含所有单词的完整 XML 文档。\n        \"\"\"\n        \"\"\"\n        <wordbook>\n            <item>\n                <word>This is a Test这是单词 或者 句子</word>\n                <trans><![CDATA[这是解释]]></trans>\n                <phonetic><![CDATA[这是音标]]></phonetic>\n                <tags>这是分类</tags>\n                <progress>0</progress>\n            </item>\n        </wordbook>\n        \"\"\"\n        # 创建 <wordbook> 根元素\n        wordbook = ET.Element(\"wordbook\")\n        \n        # 遍历所有单词，将每个单词转换为 XML 节点并添加到 <wordbook> 中\n        for word in self.words:\n            wordbook.append(word.as_node())\n        \n        # 将 ElementTree 对象转换为字符串\n        xml_str = ET.tostring(wordbook, encoding=\"unicode\", method=\"xml\")\n        return xml_str\n    \n    def save_xml(self, file_path):\n        \"\"\"\n        将 XML 文档保存到指定路径的文件中。\n        \"\"\"\n        # 将 XML 文档转换为字符串\n        xml_str = self.as_xml()\n        \n        # 将字符串写入文件\n        with open(file_path, \"w\", encoding=\"utf-8\") as f:\n            f.write(xml_str)\n        \n        return file_path\n"
         }
       ],
       "id": "fg-bsAcY",
       "createdAt": 1742546720683,
-      "updatedAt": 1742546750258
+      "updatedAt": 1742546789784
     }
   ],
   "tags": [
