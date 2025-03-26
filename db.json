@@ -169,6 +169,16 @@
       "id": "VCkpA7ri",
       "createdAt": 1740032485076,
       "updatedAt": 1740032508487
+    },
+    {
+      "name": "note",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "markdown",
+      "id": "PgWKBdHD",
+      "createdAt": 1742960538371,
+      "updatedAt": 1742960555014
     }
   ],
   "snippets": [
@@ -2288,6 +2298,24 @@
       "id": "NTDC84Ld",
       "createdAt": 1742957936993,
       "updatedAt": 1742957974615
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PgWKBdHD",
+      "tagsIds": [],
+      "description": null,
+      "name": "oray",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "markdown",
+          "value": " +--------------------------------------------------+\n |             Oray PeanutHull Linux 5.3.0          |\n +--------------------------------------------------+\n |  SN: oray109ad98a4ebf   Default password: admin  |\n +--------------------------------------------------+\n |    Remote Management Address http://b.oray.com   |\n +--------------------------------------------------+\n"
+        }
+      ],
+      "id": "YpWbKr6A",
+      "createdAt": 1742960558143,
+      "updatedAt": 1742960563742
     }
   ],
   "tags": [
