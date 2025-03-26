@@ -2280,14 +2280,14 @@
       "name": "MeloTTS",
       "content": [
         {
-          "label": "Fragment 1",
+          "label": "MeloEngine",
           "language": "python",
           "value": "from melo.api import TTS\n\nclass MeloEngine:\n    def __init__(self, language='JP', device='cuda'):\n        self.language = language\n        self.device = device\n        self.model = TTS(language=language, device=device)\n        self.speaker_ids = self.model.hps.data.spk2id[language]\n    \n    def __call__(self, text, output_path=None, speed=1.0):\n        self.model.tts_to_file(text, self.speaker_ids, output_path, speed=speed)\n\nif __name__ == '__main__':\n    import os\n\n    os.environ['HF_ENDPOINT'] = \"https://hf-mirror.com\"\n    \n    melo = MeloEngine()\n\n    # text = \"彼は毎朝ジョギングをして体を健康に保っています。\"\n    text = \"628年10月17日 金曜日 午前9時57分30秒\"\n\n    melo(text, output_path='test.wav', speed=1.0)\n    \n    pass"
         }
       ],
       "id": "NTDC84Ld",
       "createdAt": 1742957936993,
-      "updatedAt": 1742957946292
+      "updatedAt": 1742957974615
     }
   ],
   "tags": [
