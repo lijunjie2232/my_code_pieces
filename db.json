@@ -2247,6 +2247,24 @@
       "id": "fg-bsAcY",
       "createdAt": 1742546720683,
       "updatedAt": 1742548864845
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "whisper",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": "import argparse\nimport os\nimport subprocess\nfrom pathlib import Path\n\n\ndef getparser():\n    parser = argparse.ArgumentParser(\n        description=\"Download files from the internet\",\n    )\n    parser.add_argument(\n        \"-d\",\n        \"--dir\",\n        type=str,\n        required=True,\n        help=\"Directory to read the file\",\n    )\n    parser.add_argument(\n        \"-o\",\n        \"--output\",\n        type=str,\n        default=None,\n        help=\"Output directory to save the file\",\n    )\n    # mpsac: 2\n    parser.add_argument(\n        \"-m\",\n        \"--mpsac\",\n        type=int,\n        default=2,\n        help=\"Number of processes to run in parallel\",\n    )\n    # model: large-v3\n    parser.add_argument(\n        \"-model\",\n        \"--model\",\n        type=str,\n        default=\"large-v3\",\n        help=\"Model to use\",\n    )\n    # model_dir: ~/.cache/whisper\n    parser.add_argument(\n        \"-model_dir\",\n        \"--model_dir\",\n        type=str,\n        default=\"~/.cache/whisper\",\n        help=\"Model directory\",\n    )\n    # world_size: 2\n    parser.add_argument(\n        \"-w\",\n        \"--world_size\",\n        type=int,\n        default=1,\n        help=\"World size\",\n    )\n    return parser\n\n\ndef main(args):\n\n    dir = Path(args.dir).absolute()\n    output_dir = dir.parent / f\"{dir.name}_sub\"\n\n    if args.output is not None:\n        output_dir = Path(args.output).absolute()\n\n    CMD = [\n        \"torchrun\",\n        \"--nproc_per_node\",\n        str(args.world_size),\n        \"process_script.py\",\n        \"--model\",\n        args.model,\n        \"--model_dir\",\n        args.model_dir,\n        \"--mpsac\",\n        str(args.mpsac),\n    ]\n    for d in dir.iterdir():\n        subprocess.run(\n            CMD\n            + [\n                \"--input_dir\",\n                d.__str__(),\n                \"--output_dir\",\n                output_dir.__str__(),\n            ],\n            check=True,\n        )\n\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).resolve().parent\n\n    parser = getparser()\n    args = parser.parse_args()\n    main(args)\n"
+        }
+      ],
+      "id": "VVwP7Nqo",
+      "createdAt": 1742957822421,
+      "updatedAt": 1742957829534
     }
   ],
   "tags": [
