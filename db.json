@@ -2362,14 +2362,19 @@
       "name": "voicevox",
       "content": [
         {
-          "label": "Fragment 1",
+          "label": "rename",
           "language": "python",
           "value": "import shutil\nfrom pathlib import Path\nfrom tqdm import tqdm\nimport json\n\nVOICE_MAP = {\n    \"WhiteCUL（ノーマル）\": \"a\",\n    \"青山龍星（ノーマル）\": \"b\",\n}\n\n\nclass Setence:\n    def __init__(self, ja, voice_a, voice_b):\n        self.ja = ja\n        self.voice_a = voice_a\n        self.voice_b = voice_b\n\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).parent.resolve()\n    wav_dir = ROOT / \"bk_wav_new\"\n    wav_tran = ROOT / \"bk_wav_new_tran\"\n    wav_tran.mkdir(exist_ok=True)\n\n    for wav in tqdm(list(wav_dir.glob(\"*.wav\"))):\n        file_name = wav.stem.split(\"_\")\n        new_file = wav_tran / f\"{file_name[0]}_{VOICE_MAP[file_name[1]]}.wav\"\n        if new_file.is_file():\n            continue\n        shutil.copy(\n            wav,\n            new_file,\n        )\n        print(new_file)\n    pass\n\n"
+        },
+        {
+          "label": "anki",
+          "language": "python",
+          "value": "anki"
         }
       ],
       "id": "4NbKuVgA",
       "createdAt": 1745238331747,
-      "updatedAt": 1745238347722
+      "updatedAt": 1745238567364
     }
   ],
   "tags": [
