@@ -2462,6 +2462,24 @@
       "id": "ng1EATAD",
       "createdAt": 1746436163485,
       "updatedAt": 1746436195715
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "download tqdm",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": "    chuck_size = chuck_size\n\n    # download url use requests with tqdm\n    with requests.get(\n        url,\n        headers={\n            \"User-Agent\": USER_AGENT,\n        },\n        stream=True,\n    ) as r:\n        with tqdm(\n            total=int(r.headers.get(\"content-length\")),\n            unit=\"B\",\n            unit_scale=True,\n            unit_divisor=chuck_size,\n        ) as pbar:\n            with open(path, \"wb\") as f:\n                for data in r.iter_content(\n                    chunk_size=chuck_size,\n                ):\n                    f.write(data)\n                    pbar.update(len(data))"
+        }
+      ],
+      "id": "j9-3d9t7",
+      "createdAt": 1746503342598,
+      "updatedAt": 1746503351754
     }
   ],
   "tags": [
