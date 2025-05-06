@@ -2474,12 +2474,12 @@
         {
           "label": "Fragment 1",
           "language": "python",
-          "value": "    chuck_size = chuck_size\n\n    # download url use requests with tqdm\n    with requests.get(\n        url,\n        headers={\n            \"User-Agent\": USER_AGENT,\n        },\n        stream=True,\n    ) as r:\n        with tqdm(\n            total=int(r.headers.get(\"content-length\")),\n            unit=\"B\",\n            unit_scale=True,\n            unit_divisor=chuck_size,\n        ) as pbar:\n            with open(path, \"wb\") as f:\n                for data in r.iter_content(\n                    chunk_size=chuck_size,\n                ):\n                    f.write(data)\n                    pbar.update(len(data))"
+          "value": "def download_file(url, path, chuck_size=1024):\n    chuck_size = chuck_size\n\n    # download url use requests with tqdm\n    with requests.get(\n        url,\n        headers={\n            \"User-Agent\": USER_AGENT,\n        },\n        stream=True,\n    ) as r:\n        with tqdm(\n            total=int(r.headers.get(\"content-length\")),\n            unit=\"B\",\n            unit_scale=True,\n            unit_divisor=chuck_size,\n        ) as pbar:\n            with open(path, \"wb\") as f:\n                for data in r.iter_content(\n                    chunk_size=chuck_size,\n                ):\n                    f.write(data)\n                    pbar.update(len(data))"
         }
       ],
       "id": "j9-3d9t7",
       "createdAt": 1746503342598,
-      "updatedAt": 1746503351754
+      "updatedAt": 1746503363222
     }
   ],
   "tags": [
