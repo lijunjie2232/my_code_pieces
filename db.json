@@ -515,7 +515,7 @@
       ],
       "id": "iUBzP4mv",
       "createdAt": 1706543184905,
-      "updatedAt": 1725934447395
+      "updatedAt": 1746426061833
     },
     {
       "isDeleted": false,
@@ -1182,11 +1182,21 @@
           "label": "inference",
           "language": "python",
           "value": "import torch\nimport torch.distributed as dist\nimport json\nfrom pycocotools.coco import COCO\nfrom pycocotools.cocoeval import COCOeval\n\n# 模拟推理结果\ndef inference_on_gpu(model, data_loader, device):\n    model.eval()\n    all_predictions = []\n    with torch.no_grad():\n        for images, image_ids in data_loader:\n            images = images.to(device)\n            outputs = model(images)  # 假设模型输出包含预测框和类别\n\n            # 将输出转换为 COCO 格式的预测结果\n            for i, output in enumerate(outputs):\n                pred_boxes = output['boxes'].cpu().numpy()\n                pred_scores = output['scores'].cpu().numpy()\n                pred_labels = output['labels'].cpu().numpy()\n\n                # 每张图片的预测框\n                for box, score, label in zip(pred_boxes, pred_scores, pred_labels):\n                    all_predictions.append({\n                        \"image_id\": image_ids[i].item(),\n                        \"category_id\": label.item(),\n                        \"bbox\": box.tolist(),  # COCO 格式的 [x_min, y_min, width, height]\n                        \"score\": score.item()\n                    })\n    return all_predictions\n\n# 收集所有 GPU 上的推理结果\ndef gather_predictions(predictions):\n    # 如果是分布式训练，需要收集每个 GPU 的结果\n    all_predictions = [None for _ in range(dist.get_world_size())]\n    dist.all_gather_object(all_predictions, predictions)  # 收集每个 GPU 的预测结果\n    # 展平收集到的预测结果\n    all_predictions = [item for sublist in all_predictions for item in sublist]\n    return all_predictions\n\n# 计算 COCO mAP\ndef evaluate_predictions(coco_gt, all_predictions, output_file='predictions.json'):\n    with open(output_file, 'w') as f:\n        json.dump(all_predictions, f)\n\n    coco_dt = coco_gt.loadRes(output_file)\n    coco_eval = COCOeval(coco_gt, coco_dt, 'bbox')\n    coco_eval.evaluate()\n    coco_eval.accumulate()\n    coco_eval.summarize()\n\n# 主推理与评估流程\ndef main():\n    # 初始化分布式环境\n    dist.init_process_group(backend='nccl')\n\n    # 设置设备\n    device = torch.device(f'cuda:{dist.get_rank()}')\n\n    # 加载模型和数据\n    model = YourModel().to(device)\n    data_loader = YourDataLoader()  # 假设 data_loader 返回 (images, image_ids)\n    \n    # COCO ground truth 数据\n    coco_gt = COCO(annotation_file='instances_val2017.json')\n\n    # 每个 GPU 执行推理\n    predictions = inference_on_gpu(model, data_loader, device)\n\n    # 收集所有 GPU 的推理结果\n    all_predictions = gather_predictions(predictions)\n\n    # 只有 rank 0 的进程负责计算 mAP\n    if dist.get_rank() == 0:\n        evaluate_predictions(coco_gt, all_predictions)\n\n    # 结束分布式进程组\n    dist.barrier()\n    dist.destroy_process_group()\n\nif __name__ == \"__main__\":\n    main()\n"
+        },
+        {
+          "label": "main_ddp",
+          "language": "plain_text",
+          "value": "import kagglehub\nfrom pathlib import Path\nfrom torchvision import transforms\nfrom torchvision.datasets import ImageFolder\nfrom torch.utils.data import DataLoader\nimport torch\nimport torch.nn as nn\nfrom model import EmotionNet\nfrom utils import (\n    load,\n    save,\n    val_epoch,\n    train_epoch,\n    ddp_setup,\n    ddp_cleanup,\n    parse_args,\n    get_logger,\n)\nfrom tqdm import tqdm\nimport shutil\nfrom torch.utils.data.distributed import DistributedSampler\nfrom torch.nn.parallel import DistributedDataParallel as DDP\nfrom torch.distributed import get_rank, get_world_size\nimport os\nimport numpy as np\nimport random\nimport warnings\n\nwarnings.filterwarnings(\"ignore\")\n\nLOCAL_RANK = int(\n    os.getenv(\"LOCAL_RANK\", -1)\n)  # https://pytorch.org/docs/stable/elastic/run.html\nRANK = int(os.getenv(\"RANK\", -1))\nWORLD_SIZE = int(os.getenv(\"WORLD_SIZE\", 1))\n\n\ndef main(local_rank, world_size, args):\n    # ddp init\n    ddp_setup(\n        local_rank,\n        world_size,\n        master_addr=\"127.0.0.1\",\n        master_port=29500,\n    )\n\n    # logger\n    logger = get_logger(local_rank)\n\n    # ## Hyper Parameters and Configs\n    # device = \"cuda:1\"\n    device = \"cuda\"\n\n    lr = args.lr\n    step_size = args.step_size\n    batch_size = args.batch_size\n    num_workers = args.num_workers\n    epochs = args.epochs\n    start_epoch = args.start_epoch\n    train_patience = args.train_patience\n    best_checkpoint = Path(args.best_checkpoint)\n    last_checkpoint = Path(args.last_checkpoint)\n    train_data_path = args.train_data_path\n    val_data_path = args.val_data_path\n\n    # ## cudnn acceleration\n    torch.backends.cudnn.benchmark = True\n    torch.backends.cudnn.deterministic = True\n    torch.backends.cudnn.enabled = True\n\n    # ## random seed\n    seed = args.seed + get_rank()\n    torch.manual_seed(seed)\n    np.random.seed(seed)\n    random.seed(seed)\n\n    # ## prepare dataset\n    # Download latest version\n    data_id = args.data_id\n    data_root = kagglehub.dataset_download(data_id)\n    logger.info(\"Path to dataset files: \" + data_root)\n    data_root = Path(data_root)\n\n    # ## build data transforms\n    train_transformer = transforms.Compose(\n        [\n            transforms.Resize((256, 256)),\n            transforms.RandomCrop(224),  # 224x224\n            transforms.RandomHorizontalFlip(),\n            transforms.RandomRotation(degrees=15),\n            transforms.RandomVerticalFlip(),\n            transforms.ToTensor(),\n            transforms.Normalize(\n                mean=[0.485, 0.456, 0.406],\n                std=[0.229, 0.224, 0.225],\n            ),\n        ]\n    )\n    val_transformer = transforms.Compose(\n        [\n            transforms.Resize((256, 256)),\n            transforms.CenterCrop(224),\n            transforms.ToTensor(),\n            transforms.Normalize(\n                mean=[0.485, 0.456, 0.406],\n                std=[0.229, 0.224, 0.225],\n            ),\n        ]\n    )\n\n    # ## build dataset\n    train_dataset = ImageFolder(\n        root=data_root / train_data_path,\n        transform=train_transformer,\n    )\n    val_dataset = ImageFolder(\n        root=data_root / val_data_path,\n        transform=val_transformer,\n    )\n\n    # ## build model\n    model = EmotionNet(\n        nc=len(train_dataset.classes),\n    ).cuda()\n\n    # ## build loss, optimizer and lr_scheduler\n    optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999))\n    scheduler = torch.optim.lr_scheduler.StepLR(\n        optimizer,\n        step_size=step_size,\n        gamma=0.1,\n    )\n    criterion = nn.CrossEntropyLoss()\n    scaler = torch.amp.GradScaler()\n\n    if last_checkpoint.is_file():\n        ckp_epoch = load(\n            model=model,\n            optimizer=optimizer,\n            path=last_checkpoint,\n        )\n        if start_epoch == -1:\n            start_epoch = ckp_epoch\n        logger.info(\n            f\"continue from {last_checkpoint.__str__()}, \"\n            + f\"start at epoch {start_epoch+1}\"\n        )\n\n    # ## model set ddp\n    ddp_model = DDP(\n        model,\n        device_ids=[local_rank],\n        find_unused_parameters=True,\n    )\n\n    # ## build dataloader\n    train_sampler = DistributedSampler(\n        train_dataset,\n        rank=get_rank(),\n        seed=seed,\n        num_replicas=get_world_size(),\n    )\n    train_sampler.set_epoch(start_epoch + 1)\n    train_dataloader = DataLoader(\n        train_dataset,\n        batch_size=batch_size,\n        num_workers=num_workers,\n        shuffle=False,\n        sampler=train_sampler,\n    )\n    val_dataloader = DataLoader(\n        val_dataset,\n        batch_size=batch_size,\n        shuffle=False,\n    )\n\n    # ## train model\n    loop = (\n        tqdm(range(start_epoch + 1, epochs))\n        if local_rank == 0\n        else range(start_epoch + 1, epochs)\n    )\n    best_acc = 0\n    patience = train_patience\n    for epoch in loop:\n        if local_rank == 0:\n            loop.set_description(f\"Epoch [{epoch+1}/{epochs}]\")\n        # torch.distributed.barrier()\n        train_acc, train_loss = train_epoch(\n            ddp_model,\n            train_dataloader,\n            optimizer,\n            scheduler,\n            criterion,\n            scaler,\n            device=device,\n            progress=local_rank == 0,\n        )\n        if local_rank == 0:\n            loop.set_postfix(\n                train_acc=train_acc,\n                train_loss=train_loss,\n            )\n            val_acc, val_loss = val_epoch(\n                ddp_model,\n                val_dataloader,\n                criterion,\n                device=device,\n            )\n            loop.set_postfix(\n                train_acc=train_acc,\n                train_loss=train_loss,\n                val_acc=val_acc,\n                val_loss=val_loss,\n            )\n\n            save(ddp_model.module, optimizer, epoch, last_checkpoint)\n\n            if val_acc > best_acc:\n                shutil.copyfile(last_checkpoint, best_checkpoint)\n                best_acc = val_acc\n                patience = train_patience\n            else:\n                patience -= 1\n            if patience == 0:\n                logger.info(\"no patience, early stop...\")\n                break\n    ddp_cleanup()\n    logger.info(\"done.\")\n\n\nif __name__ == \"__main__\":\n\n    args = parse_args()\n    main(LOCAL_RANK, WORLD_SIZE, args)\n    exit(0)\n    # cmd: torchrun --nproc-per-node=2 --master-port 29500 main_ddp.py"
+        },
+        {
+          "label": "util",
+          "language": "python",
+          "value": "def ddp_setup(\n    rank: int,\n    world_size: int,\n    backend=\"nccl\",\n    master_addr=\"localhost\",\n    master_port=12355,\n):\n    \"\"\"\n    Args:\n        rank: Unique identifier of each process\n    world_size: Total number of processes\n    \"\"\"\n    os.environ[\"MASTER_ADDR\"] = master_addr\n    os.environ[\"MASTER_PORT\"] = str(master_port)\n    torch.cuda.set_device(rank)\n    init_process_group(\n        backend=backend, rank=rank, world_size=world_size, init_method=\"env://\"\n    )\n\n\ndef ddp_cleanup():\n    destroy_process_group()"
         }
       ],
       "id": "PfEmpLuD",
       "createdAt": 1725932493707,
-      "updatedAt": 1726814950100
+      "updatedAt": 1746436147572
     },
     {
       "isDeleted": false,
@@ -2375,6 +2385,83 @@
       "id": "4NbKuVgA",
       "createdAt": 1745238331747,
       "updatedAt": 1745240130151
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "singleton",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": "class Solution:\n    # 1、记录第一个被创建对象的引用，代表着类的私有属性\n    _instance = None # 静态变量 存储在类的命名空间里的\n\n    def __init__(self,name,data):\n        self.name = name\n        self.data = data\n        self.xml_load(self.data)\n\n    def __new__(cls, *args, **kwargs):\n        # 2.判断该类的属性是否为空；对第一个对象没有被创建，我们应该调用父类的方法，为第一个对象分配空间\n        if cls._instance == None:  \n            # 3.把类属性中保存的对象引用返回给python的解释器\n            cls._instance = object.__new__(cls)  # 3\n            return cls._instance\n        # 如果cls._instance不为None,直接返回已经实例化了的实例对象\n        else:\n            return cls._instance  # 必须把地址返回给new方法，让它有存储空间\n\n    def xml_load(self,data):\n        print(\"初始化init\",self.name,data)\n\n    def Parser(self):\n        print(\"解析完成finish\",self.name)\n\na = Solution(\"A11\",10)  #第一次开辟一个对象空间地址，后面创建都是在该地址上进行的\na.Parser()\nb = Solution(\"A12\",20)  #b把a覆盖掉\nb.Parser()\nprint(id(a))\nprint(id(b))\n# 内存地址，而且它们的内存地址都是一样的\nprint(a.name)\nprint(b.name)"
+        }
+      ],
+      "id": "n4eLuxEl",
+      "createdAt": 1746247756330,
+      "updatedAt": 1746247761800
+    },
+    {
+      "isDeleted": true,
+      "isFavorites": false,
+      "folderId": "weWtbZI4",
+      "tagsIds": [],
+      "description": null,
+      "name": "",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "a5sePRNb",
+      "createdAt": 1746416405665,
+      "updatedAt": 1746416410661
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "docker gpu",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "python",
+          "value": "docker run -itd --restart=always --shm-size=32g --gpus all -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_R_CAPABILITIES=compute,utility -v /home/C:/data/C -v /root:/rootm -v /home/B:/data/B --name project_docker project:v0.2"
+        }
+      ],
+      "id": "TmHM7l7v",
+      "createdAt": 1746416412705,
+      "updatedAt": 1746436393249
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "DvcfGvIx",
+      "tagsIds": [],
+      "description": null,
+      "name": "logger",
+      "content": [
+        {
+          "label": "logger ddp",
+          "language": "python",
+          "value": "def get_logger(\n    local_rank=0,\n    name=\"logger\",\n    cli_level=logging.INFO,\n    log_level=logging.DEBUG,\n    cli=True,\n    log_dir=None,\n):\n    logger = logging.getLogger(name)\n    logger.setLevel(logging.DEBUG)\n    logger.propagate = False\n\n    if cli:\n        cli_formatter = logging.Formatter(\"%(message)s\")\n        cli_handler = logging.StreamHandler(sys.stdout)\n        cli_handler.setLevel(cli_level if local_rank == 0 else logging.CRITICAL)\n        cli_handler.setFormatter(cli_formatter)\n        logger.addHandler(cli_handler)\n\n    if log_dir:\n        log_dir = Path(log_dir)\n        if log_dir.is_file():\n            raise ValueError(f\"Log directory path exists as file: {log_dir}\")\n        log_dir.mkdir(exist_ok=True, parents=True)\n\n        file_formatter = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\n        file_handler = logging.FileHandler(\n            log_dir / f\"log_rank{local_rank}.txt\",\n        )\n        file_handler.setLevel(log_level)\n        file_handler.setFormatter(file_formatter)\n        logger.addHandler(file_handler)\n\n    return logger\n"
+        },
+        {
+          "label": "Fragment 2",
+          "language": "python",
+          "value": ""
+        }
+      ],
+      "id": "ng1EATAD",
+      "createdAt": 1746436163485,
+      "updatedAt": 1746436195715
     }
   ],
   "tags": [
