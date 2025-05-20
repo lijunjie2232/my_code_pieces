@@ -2502,12 +2502,12 @@
         {
           "label": "Fragment 1",
           "language": "markdown",
-          "value": "1. `=LOOKUP(ROW(),ROW($A$1:$A$10)/($A$1:$A$10<>\"\"),$A$1:$A$10)`添加辅助列获取各行对于的合并单元格内值\n2. 获取单元格区间：\n\t1. 起始行`=MATCH(C1,$C$1:$C$100,0)-1+ROW(C1)`\n  2. 结束行`=MAX(FILTER(ROW(C1:C100),C1:C100=C1))`"
+          "value": "1. `=LOOKUP(ROW(),ROW($A$1:$A$100)/($A$1:$A$100<>\"\"),$A$1:$A$100)`添加辅助列获取各行对于的合并单元格内值\n2. 获取单元格区间：\n\t1. 起始行`=MATCH(C1,$C$1:$C$100,0)-1+ROW(C1)`\n  2. 结束行`=MAX(FILTER(ROW(C1:C100),C1:C100=C1))`"
         }
       ],
       "id": "WVh_nTma",
       "createdAt": 1747730498796,
-      "updatedAt": 1747731037805
+      "updatedAt": 1747731653347
     }
   ],
   "tags": [
