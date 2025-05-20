@@ -2508,6 +2508,42 @@
       "id": "WVh_nTma",
       "createdAt": 1747730498796,
       "updatedAt": 1747731653347
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "nmSUyJ94",
+      "tagsIds": [],
+      "description": null,
+      "name": "match",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "markdown",
+          "value": "语法：\n\nMATCH(lookup_value, lookup_array, [match_type])。\n\n\n\nlookup_value 必需。要在 lookup_array 中匹配的值。\nlookup_value 参数可以为值（数字、文本或逻辑值）或对数字、文本或逻辑值的单元格引用。\nlookup_array 必需。要搜索的单元格区域。\nmatch_type 可选。数字 -1、0 或 1。match_type 参数指定 Excel 如何将lookup_value 与 lookup_array 中的值匹配。此参数的默认值为 1。\n\n\n1 或省略\n\nMATCH 查找小于或等于 lookup_value 的最大值。lookup_array 参数中的值必须以升序排序，例如：...-2, -1, 0, 1, 2, ..., A-Z, FALSE, TRUE。\n\n0\n\nMATCH 查找完全等于 lookup_value 的第一个值。lookup_array 参数中的值可按任何顺序排列。\n\n-1\n\nMATCH 查找大于或等于 lookup_value 的最小值。lookup_array 参数中的值必须按降序排列，例如：TRUE, FALSE, Z-A, ...2, 1, 0, -1, -2, ... 等等。\n\n注意事项：\n\n1、MATCH函数返回查找项的位置，而不是值本身。如果需要获取值本身，则需要和其它函数一起使用，如INDEX、VLOOKUP。\n\n2、匹配文本值时，MATCH 函数不区分大小写字母。\n\n3、如果 match_type 为 0 且 lookup_value 为文本字符串，您可在lookup_value 参数中使用通配符 - 问号 (?) 和星号 (*) 。问号匹配任意单个字符；星号匹配任意一串字符。如果要查找实际的问号或星号，请在字符前键入波形符 (~)。\n\n4、如果 MATCH 函数查找匹配项不成功，它会返回错误值 #N/A。"
+        }
+      ],
+      "id": "Nuebc0h1",
+      "createdAt": 1747731989796,
+      "updatedAt": 1747731994196
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "PgWKBdHD",
+      "tagsIds": [],
+      "description": null,
+      "name": "windows pin",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "markdown",
+          "value": "ngc:\nC:\\Windows\\ServiceProfiles\\LocalService\\AppData\\Local\\Microsoft\n"
+        }
+      ],
+      "id": "7211JGNL",
+      "createdAt": 1747741406945,
+      "updatedAt": 1747741423209
     }
   ],
   "tags": [
