@@ -179,6 +179,16 @@
       "id": "PgWKBdHD",
       "createdAt": 1742960538371,
       "updatedAt": 1742960555014
+    },
+    {
+      "name": "excel",
+      "parentId": null,
+      "isOpen": false,
+      "isSystem": false,
+      "defaultLanguage": "markdown",
+      "id": "nmSUyJ94",
+      "createdAt": 1747730468941,
+      "updatedAt": 1747730497339
     }
   ],
   "snippets": [
@@ -2480,6 +2490,24 @@
       "id": "j9-3d9t7",
       "createdAt": 1746503342598,
       "updatedAt": 1746503363222
+    },
+    {
+      "isDeleted": false,
+      "isFavorites": false,
+      "folderId": "nmSUyJ94",
+      "tagsIds": [],
+      "description": null,
+      "name": "合并单元格分类",
+      "content": [
+        {
+          "label": "Fragment 1",
+          "language": "markdown",
+          "value": "1. `=LOOKUP(ROW(),ROW($A$1:$A$10)/($A$1:$A$10<>\"\"),$A$1:$A$10)`添加辅助列获取各行对于的合并单元格内值\n2. 获取单元格区间：\n\t1. 起始行`=MATCH(C1,$C$1:$C$100,0)-1+ROW(C1)`\n  2. 结束行`=MAX(FILTER(ROW(C1:C100),C1:C100=C1))`"
+        }
+      ],
+      "id": "WVh_nTma",
+      "createdAt": 1747730498796,
+      "updatedAt": 1747731037805
     }
   ],
   "tags": [
