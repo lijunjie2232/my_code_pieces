@@ -2559,14 +2559,14 @@
           "value": "import json\nimport hashlib\nfrom pathlib import Path\nfrom shutil import move\n\nNAME_HASH_DICT = {}\nHASH_NAME_DICT = {}\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).parent\n\n    name_hash_file = ROOT / \"name_hash_dict.json\"\n    hash_name_file = ROOT / \"hash_name_dict.json\"\n\n    if name_hash_file.is_file():\n        with open(\n            name_hash_file,\n            \"r\",\n            encoding=\"utf8\",\n        ) as f:\n            NAME_HASH_DICT = json.load(f)\n    \n    if hash_name_file.is_file():\n        with open(\n            hash_name_file,\n            \"r\",\n            encoding=\"utf8\",\n        ) as f:\n            HASH_NAME_DICT = json.load(f)\n\n    files = list(ROOT.glob(\"*.mp3\"))\n\n    files_not_encoded = list(\n        filter(lambda x: x.stem not in HASH_NAME_DICT, files)\n    )\n\n    for file in files_not_encoded:\n        file_hash = hashlib.md5(file.stem.encode(\"utf8\")).hexdigest()\n        move(file, ROOT / f\"{file_hash}.mp3\")\n        print(f\"{file.stem} -> {file_hash}\")\n        NAME_HASH_DICT[file.stem] = file_hash\n        HASH_NAME_DICT[file_hash] = file.stem\n\n    with open(\n        name_hash_file,\n        \"w\",\n        encoding=\"utf8\",\n    ) as f:\n        json.dump(NAME_HASH_DICT, f)\n    \n    with open(\n        hash_name_file,\n        \"w\",\n        encoding=\"utf8\",\n    ) as f:\n        json.dump(HASH_NAME_DICT, f)\n"
         },
         {
-          "label": "Fragment 2",
+          "label": "decode",
           "language": "python",
-          "value": ""
+          "value": "import json\nimport hashlib\nfrom pathlib import Path\nfrom shutil import move\n\nNAME_HASH_DICT = {}\nHASH_NAME_DICT = {}\n\nif __name__ == \"__main__\":\n    ROOT = Path(__file__).parent\n\n    name_hash_file = ROOT / \"name_hash_dict.json\"\n    hash_name_file = ROOT / \"hash_name_dict.json\"\n\n    if name_hash_file.is_file():\n        with open(\n            name_hash_file,\n            \"r\",\n            encoding=\"utf8\",\n        ) as f:\n            NAME_HASH_DICT = json.load(f)\n    \n    if hash_name_file.is_file():\n        with open(\n            hash_name_file,\n            \"r\",\n            encoding=\"utf8\",\n        ) as f:\n            HASH_NAME_DICT = json.load(f)\n\n    files = list(ROOT.glob(\"*.mp3\"))\n\n    files_not_encoded = list(\n        filter(lambda x: x.stem not in HASH_NAME_DICT, files)\n    )\n\n    for file in files_not_encoded:\n        file_hash = hashlib.md5(file.stem.encode(\"utf8\")).hexdigest()\n        move(file, ROOT / f\"{file_hash}.mp3\")\n        print(f\"{file.stem} -> {file_hash}\")\n        NAME_HASH_DICT[file.stem] = file_hash\n        HASH_NAME_DICT[file_hash] = file.stem\n\n    with open(\n        name_hash_file,\n        \"w\",\n        encoding=\"utf8\",\n    ) as f:\n        json.dump(NAME_HASH_DICT, f)\n    \n    with open(\n        hash_name_file,\n        \"w\",\n        encoding=\"utf8\",\n    ) as f:\n        json.dump(HASH_NAME_DICT, f)\n"
         }
       ],
       "id": "vbqpQYK7",
       "createdAt": 1757415698519,
-      "updatedAt": 1757415731029
+      "updatedAt": 1757415739282
     }
   ],
   "tags": [
