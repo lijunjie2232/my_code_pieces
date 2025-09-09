@@ -2443,12 +2443,12 @@
         {
           "label": "Fragment 1",
           "language": "python",
-          "value": "docker run -itd --restart=always --shm-size=32g --gpus all -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_R_CAPABILITIES=compute,utility -v /home/C:/data/C -v /root:/rootm -v /home/B:/data/B --name project_docker project:v0.2"
+          "value": "docker run -itd --privileged --restart=always --shm-size=64g --gpus all -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_R_CAPABILITIES=compute,utility -v /home/C:/data/C -v /root:/rootm -v /home/B:/data/B --name project_docker project:v1.0.0 /sbin/init\n\npodman run -itd --restart=always --shm-size=64g --device nvidia.com/gpu=all -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_R_CAPABILITIES=compute,utility -v /home/C:/data/C -v /root:/rootm -v /home/B:/data/B --name project_docker project:v1.0"
         }
       ],
       "id": "TmHM7l7v",
       "createdAt": 1746416412705,
-      "updatedAt": 1746436393249
+      "updatedAt": 1750241668079
     },
     {
       "isDeleted": false,
